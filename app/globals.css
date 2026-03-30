@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --font-display: "Avenir Next", "Segoe UI Variable", "Segoe UI", sans-serif;
+  --font-body: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background:
+    linear-gradient(180deg, rgba(2, 6, 23, 0.98), rgba(3, 10, 25, 1)),
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.08), transparent 28%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: rgba(103, 232, 249, 0.24);
+  color: white;
+}
