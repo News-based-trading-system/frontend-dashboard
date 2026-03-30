@@ -1,5 +1,4 @@
-import { createClient } from "../utils/supabase/server";
-import { cookies } from "next/headers";
+import { getSupabaseServerClient } from "../utils/supabase/index";
 import type { ReactElement } from "react";
 
 type AssetScoreRow = {
@@ -12,8 +11,7 @@ type AssetScoreRow = {
 };
 
 export default async function Page(): Promise<ReactElement> {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const supabase = await getSupabaseServerClient();
 
   const { data, error } = await supabase
     .from("asset_score")
