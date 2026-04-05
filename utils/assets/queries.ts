@@ -10,7 +10,7 @@ import type {
 import { ASSET_ROUTE_LABELS } from "./types";
 
 const ASSET_SELECT =
-  "asset_name, asset_type, asset_score, bull_sum, bear_sum, abs_sum, event_count, latest_event_id, last_event_time, horizon_buckets, avg_half_life_hours, direction, confidence, disagreement, display_flag, updated_at";
+  "asset_name, asset_type, asset_score, bull_sum, bear_sum, abs_sum, event_count, latest_event_id, last_event_time, horizon_buckets, direction, confidence, disagreement, display_flag, updated_at";
 
 const ASSET_TYPE_PATTERNS: Record<AssetTypeRoute, string[]> = {
   stocks: ["stock", "stocks", "equity"],
@@ -31,7 +31,7 @@ const applyCommonFilters = (query: any, options: AssetQueryOptions) => {
 
   if (options.type) {
     const orClause = ASSET_TYPE_PATTERNS[options.type]
-      .map((pattern) => `asset_type.ilike.${pattern}`)
+      .map((pattern) => `asset_type.ilike.*${pattern}*`)
       .join(",");
     nextQuery = nextQuery.or(orClause);
   }
@@ -52,8 +52,8 @@ const applySorting = (
         .order("updated_at", { ascending: false });
     case "latest":
       return query
-        .order("updated_at", { ascending: false })
-        .order("last_event_time", { ascending: false, nullsFirst: false });
+        .order("last_event_time", { ascending: false, nullsFirst: false })
+        .order("updated_at", { ascending: false });
     case "activity":
       return query
         .order("abs_sum", { ascending: false })

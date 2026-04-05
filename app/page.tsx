@@ -120,7 +120,7 @@ export default async function Home() {
           }
         />
         <div className="grid gap-6 xl:grid-cols-2">
-          {featured.slice(0, 2).map((asset: any) => (
+          {featured.slice(0, 2).map((asset) => (
             <AssetCard key={asset.asset_name} asset={asset} />
           ))}
         </div>
@@ -134,7 +134,7 @@ export default async function Home() {
             description="A curated slice of the strongest bullish setups visible right now."
           />
           <div className="grid gap-6">
-            {bullish.slice(0, 3).map((asset: any) => (
+            {bullish.slice(0, 3).map((asset) => (
               <AssetCard key={asset.asset_name} asset={asset} />
             ))}
           </div>
@@ -146,7 +146,7 @@ export default async function Home() {
             description="Curated bearish assets where confidence, activity, and urgency combine in useful ways."
           />
           <div className="grid gap-6">
-            {bearish.slice(0, 3).map((asset: any) => (
+            {bearish.slice(0, 3).map((asset) => (
               <AssetCard key={asset.asset_name} asset={asset} />
             ))}
           </div>

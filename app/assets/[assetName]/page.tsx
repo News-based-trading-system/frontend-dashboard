@@ -5,6 +5,7 @@ import { AssetDirectionBadge } from "../../../components/assets/asset-direction-
 import { SectionHeading } from "../../../components/section-heading";
 import {
   formatCompactNumber,
+  formatEventId,
   formatNumber,
   formatPercent,
   formatSignedNumber,
@@ -16,6 +17,18 @@ import {
 
 type AssetDetailPageProps = {
   params: Promise<{ assetName: string }>;
+};
+
+const formatBucketValue = (value: string | number | boolean | null) => {
+  if (typeof value === "number") {
+    return formatNumber(value);
+  }
+
+  if (typeof value === "boolean") {
+    return value ? "True" : "False";
+  }
+
+  return String(value);
 };
 
 export default async function AssetDetailPage({ params }: AssetDetailPageProps) {
@@ -99,8 +112,8 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
               <dd className="font-medium text-slate-100">{formatSignedNumber(asset.bear_sum)}</dd>
             </div>
             <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-              <dt>Average half-life</dt>
-              <dd className="font-medium text-slate-100">{formatNumber(asset.avg_half_life_hours)}h</dd>
+              <dt>Latest event ID</dt>
+              <dd className="font-mono text-xs text-slate-100">{formatEventId(asset.latest_event_id)}</dd>
             </div>
             <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
               <dt>Last event time</dt>
@@ -119,7 +132,9 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
               {horizonEntries.map(([key, value]) => (
                 <div key={key} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-500">{key}</p>
-                  <p className="mt-2 text-xl font-semibold text-slate-50">{String(value)}</p>
+                  <p className="mt-2 text-xl font-semibold text-slate-50">
+                    {formatBucketValue(value as string | number | boolean | null)}
+                  </p>
                 </div>
               ))}
             </div>

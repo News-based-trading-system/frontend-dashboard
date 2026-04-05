@@ -30,7 +30,24 @@ export const formatTimestamp = (value: string | null) => {
     return "No recent update";
   }
 
-  return dateFormatter.format(new Date(value));
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return "No recent update";
+  }
+
+  return dateFormatter.format(parsed);
+};
+
+export const formatEventId = (value: string | null) => {
+  if (!value) {
+    return "Unavailable";
+  }
+
+  if (value.length <= 14) {
+    return value;
+  }
+
+  return `${value.slice(0, 8)}...${value.slice(-4)}`;
 };
 
 export const normalizeDirection = (direction: string): AssetDirection => {

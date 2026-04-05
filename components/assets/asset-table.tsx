@@ -24,6 +24,7 @@ export function AssetTable({ assets }: AssetTableProps) {
               <th className="px-6 py-4 font-medium">Signal</th>
               <th className="px-6 py-4 font-medium">Confidence</th>
               <th className="px-6 py-4 font-medium">Activity</th>
+              <th className="px-6 py-4 font-medium">Last event</th>
               <th className="px-6 py-4 font-medium">Updated</th>
             </tr>
           </thead>
@@ -51,6 +52,7 @@ export function AssetTable({ assets }: AssetTableProps) {
                 <td className="px-6 py-5 text-slate-300">
                   {formatCompactNumber(asset.abs_sum)} / {asset.event_count} events
                 </td>
+                <td className="px-6 py-5 text-slate-300">{formatTimestamp(asset.last_event_time)}</td>
                 <td className="px-6 py-5 text-slate-300">{formatTimestamp(asset.updated_at)}</td>
               </tr>
             ))}

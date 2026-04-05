@@ -19,8 +19,7 @@ export type AssetScoreRecord = {
   event_count: number;
   latest_event_id: string | null;
   last_event_time: string | null;
-  horizon_buckets: Record<string, number | string | null> | null;
-  avg_half_life_hours: number;
+  horizon_buckets: Record<string, number | string | boolean | null> | null;
   direction: string;
   confidence: number;
   disagreement: number;

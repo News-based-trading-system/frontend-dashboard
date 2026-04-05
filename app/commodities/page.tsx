@@ -17,7 +17,7 @@ export default async function CommoditiesPage({ searchParams }: CommoditiesPageP
     <AssetCollectionPage
       eyebrow="Commodities"
       title="Macro-sensitive commodity signals with curated urgency"
-      description="Track commodity opportunities with a cleaner view into activity, disagreement, and signal half-life."
+      description="Track commodity opportunities with a cleaner view into activity, disagreement, and signal timing."
       assets={assets}
       filters={filters}
       allowType={false}
