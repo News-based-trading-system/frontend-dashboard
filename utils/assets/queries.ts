@@ -1,22 +1,74 @@
 import { getSupabaseServerClient } from "../supabase/index";
+import { toUtcIsoString } from "../time/utc";
 import type {
+  ArticleSummaryRecord,
+  AssetContributionRecord,
   AssetDirection,
+  AssetExplainabilityOptions,
+  AssetExplainabilityRow,
   AssetOverviewMetric,
   AssetQueryOptions,
   AssetScoreRecord,
+  EventSummaryRecord,
   AssetSortKey,
   AssetTypeRoute,
 } from "./types";
 import { ASSET_ROUTE_LABELS } from "./types";
 
 const ASSET_SELECT =
-  "asset_name, asset_type, asset_score, bull_sum, bear_sum, abs_sum, event_count, latest_event_id, last_event_time, horizon_buckets, direction, confidence, disagreement, display_flag, updated_at";
+  "asset_name, asset_type, asset_score, bull_sum, bear_sum, abs_sum, event_count, latest_event_id, last_event_time, direction, confidence, disagreement, display_flag, updated_at";
+
+const ASSET_CONTRIBUTION_SELECT =
+  "event_id, asset_key, asset_name, asset_type, event_time, arrival_time, initial_contribution, current_contribution, is_active, updated_at, duplicate_group_key";
+
+const EVENT_SELECT =
+  "id, article_id, event_type, certainty, event_severity, event_time, extracted_at, updated_at, event_headline, region_of_effect, event_confidence, asset_impacts, is_active, inactive_at";
+
+const ARTICLE_SELECT =
+  "id, headline, url, summary, published_at, ingested_at, extraction_status, extraction_attempts, queued_at, processing_started_at, dead_lettered_at, last_error, next_retry_at, processed";
+
+const ASSET_TABLE = "assets";
 
 const ASSET_TYPE_PATTERNS: Record<AssetTypeRoute, string[]> = {
   stocks: ["stock", "stocks", "equity"],
   etfs: ["etf", "etfs", "fund"],
   commodities: ["commodity", "commodities", "macro"],
 };
+
+const normalizeAssetRecord = (record: AssetScoreRecord): AssetScoreRecord => ({
+  ...record,
+  last_event_time: toUtcIsoString(record.last_event_time),
+  updated_at: toUtcIsoString(record.updated_at) ?? record.updated_at,
+});
+
+const normalizeContributionRecord = (
+  record: AssetContributionRecord,
+): AssetContributionRecord => ({
+  ...record,
+  event_time: toUtcIsoString(record.event_time),
+  arrival_time: toUtcIsoString(record.arrival_time) ?? record.arrival_time,
+  updated_at: toUtcIsoString(record.updated_at) ?? record.updated_at,
+});
+
+const normalizeEventRecord = (record: EventSummaryRecord): EventSummaryRecord => ({
+  ...record,
+  event_time: toUtcIsoString(record.event_time) ?? record.event_time,
+  extracted_at: toUtcIsoString(record.extracted_at) ?? record.extracted_at,
+  updated_at: toUtcIsoString(record.updated_at) ?? record.updated_at,
+  inactive_at: toUtcIsoString(record.inactive_at),
+});
+
+const normalizeArticleRecord = (
+  record: ArticleSummaryRecord,
+): ArticleSummaryRecord => ({
+  ...record,
+  published_at: toUtcIsoString(record.published_at),
+  ingested_at: toUtcIsoString(record.ingested_at),
+  queued_at: toUtcIsoString(record.queued_at),
+  processing_started_at: toUtcIsoString(record.processing_started_at),
+  dead_lettered_at: toUtcIsoString(record.dead_lettered_at),
+  next_retry_at: toUtcIsoString(record.next_retry_at),
+});
 
 const applyCommonFilters = (query: any, options: AssetQueryOptions) => {
   let nextQuery = query.eq("display_flag", true);
@@ -80,12 +132,12 @@ const executeAssetQuery = async (query: any) => {
     throw new Error(error.message);
   }
 
-  return (data ?? []) as AssetScoreRecord[];
+  return ((data ?? []) as AssetScoreRecord[]).map(normalizeAssetRecord);
 };
 
 const createAssetListQuery = async (options: AssetQueryOptions) => {
   const supabase = await getSupabaseServerClient();
-  let query = supabase.from("asset_score").select(ASSET_SELECT);
+  let query = supabase.from(ASSET_TABLE).select(ASSET_SELECT);
 
   query = applyCommonFilters(query, options);
   query = applySorting(query, options.sort ?? "score", options.direction);
@@ -103,7 +155,7 @@ export const getAssets = async (options: AssetQueryOptions = {}) =>
 export const getAssetByName = async (assetName: string) => {
   const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase
-    .from("asset_score")
+    .from(ASSET_TABLE)
     .select(ASSET_SELECT)
     .eq("display_flag", true)
     .eq("asset_name", assetName)
@@ -113,14 +165,97 @@ export const getAssetByName = async (assetName: string) => {
     throw new Error(error.message);
   }
 
-  return (data ?? null) as AssetScoreRecord | null;
+  if (!data) {
+    return null;
+  }
+
+  return normalizeAssetRecord(data as AssetScoreRecord);
+};
+
+export const getAssetExplainability = async (
+  assetName: string,
+  options: AssetExplainabilityOptions = {},
+) => {
+  const supabase = await getSupabaseServerClient();
+  let contributionsQuery = supabase
+    .from("asset_score_contribution")
+    .select(ASSET_CONTRIBUTION_SELECT)
+    .eq("asset_name", assetName)
+    .order("is_active", { ascending: false })
+    .order("event_time", { ascending: false, nullsFirst: false })
+    .order("arrival_time", { ascending: false })
+    .order("updated_at", { ascending: false });
+
+  if (!options.includeInactive) {
+    contributionsQuery = contributionsQuery.eq("is_active", true);
+  }
+
+  if (options.limit) {
+    contributionsQuery = contributionsQuery.limit(options.limit);
+  }
+
+  const { data: contributionRows, error: contributionError } =
+    await contributionsQuery;
+
+  if (contributionError) {
+    throw new Error(contributionError.message);
+  }
+
+  const contributions = ((contributionRows ?? []) as AssetContributionRecord[]).map(
+    normalizeContributionRecord,
+  );
+
+  if (contributions.length === 0) {
+    return [] as AssetExplainabilityRow[];
+  }
+
+  const eventIds = [...new Set(contributions.map((item) => item.event_id))];
+  const { data: eventRows, error: eventError } = await supabase
+    .from("events")
+    .select(EVENT_SELECT)
+    .in("id", eventIds);
+
+  if (eventError) {
+    throw new Error(eventError.message);
+  }
+
+  const events = ((eventRows ?? []) as EventSummaryRecord[]).map(normalizeEventRecord);
+  const eventsById = new Map(events.map((event) => [event.id, event]));
+
+  const articleIds = [...new Set(events.map((event) => event.article_id))];
+  let articlesById = new Map<string, ArticleSummaryRecord>();
+
+  if (articleIds.length > 0) {
+    const { data: articleRows, error: articleError } = await supabase
+      .from("articles")
+      .select(ARTICLE_SELECT)
+      .in("id", articleIds);
+
+    if (articleError) {
+      throw new Error(articleError.message);
+    }
+
+    const articles = ((articleRows ?? []) as ArticleSummaryRecord[]).map(
+      normalizeArticleRecord,
+    );
+    articlesById = new Map(articles.map((article) => [article.id, article]));
+  }
+
+  return contributions.map((contribution) => {
+    const event = eventsById.get(contribution.event_id) ?? null;
+    const article = event ? articlesById.get(event.article_id) ?? null : null;
+
+    return {
+      contribution,
+      event,
+      article,
+    };
+  });
 };
 
 const countAssets = async (options: AssetQueryOptions = {}) => {
   const supabase = await getSupabaseServerClient();
-  let query = supabase
-    .from("asset_score")
-    .select("*", { count: "exact", head: true });
+  let query = supabase.from(ASSET_TABLE).select("*", { count: "exact", head: true });
 
   query = applyCommonFilters(query, options);
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AssetCard } from "../../../components/assets/asset-card";
 import { AssetDirectionBadge } from "../../../components/assets/asset-direction-badge";
+import { AssetExplainabilityTable } from "../../../components/assets/asset-explainability-table";
 import { SectionHeading } from "../../../components/section-heading";
 import {
   formatCompactNumber,
@@ -11,24 +12,13 @@ import {
   formatSignedNumber,
   formatTimestamp,
   getAssetByName,
+  getAssetExplainability,
   getAssets,
   getSignalNarrative,
 } from "../../../utils/assets";
 
 type AssetDetailPageProps = {
   params: Promise<{ assetName: string }>;
-};
-
-const formatBucketValue = (value: string | number | boolean | null) => {
-  if (typeof value === "number") {
-    return formatNumber(value);
-  }
-
-  if (typeof value === "boolean") {
-    return value ? "True" : "False";
-  }
-
-  return String(value);
 };
 
 export default async function AssetDetailPage({ params }: AssetDetailPageProps) {
@@ -46,9 +36,10 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
         candidate.asset_name !== asset.asset_name && candidate.asset_type === asset.asset_type,
     )
     .slice(0, 3);
-  const horizonEntries = Object.entries(asset.horizon_buckets ?? {}).filter(
-    ([, value]) => value !== null && value !== "",
-  );
+  const explainabilityRows = await getAssetExplainability(asset.asset_name, {
+    includeInactive: true,
+    limit: 40,
+  });
 
   return (
     <div className="space-y-10 pb-12">
@@ -123,26 +114,11 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
         </div>
         <div className="rounded-[30px] border border-white/10 bg-slate-900/60 p-6">
           <SectionHeading
-            eyebrow="Horizon buckets"
-            title="Optional time-window context"
-            description="Rendered only when the source row includes usable horizon bucket data."
+            eyebrow="Signal explainability"
+            title="How each event contributes"
+            description="Contribution rows include current versus original impact, event certainty/severity, and source article context."
           />
-          {horizonEntries.length > 0 ? (
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              {horizonEntries.map(([key, value]) => (
-                <div key={key} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500">{key}</p>
-                  <p className="mt-2 text-xl font-semibold text-slate-50">
-                    {formatBucketValue(value as string | number | boolean | null)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-white/5 px-5 py-8 text-sm text-slate-300">
-              No horizon bucket breakdown is currently exposed for this asset.
-            </div>
-          )}
+          <AssetExplainabilityTable rows={explainabilityRows} />
         </div>
       </section>
 

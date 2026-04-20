@@ -2,6 +2,8 @@ import Link from "next/link";
 
 const navigation = [
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/events", label: "Live Events" },
+  { href: "/ops", label: "Ops" },
   { href: "/bullish", label: "Bullish" },
   { href: "/bearish", label: "Bearish" },
   { href: "/stocks", label: "Stocks" },
