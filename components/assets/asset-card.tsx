@@ -10,39 +10,77 @@ type AssetCardProps = {
 
 export function AssetCard({ asset }: AssetCardProps) {
   return (
-    <article className="group rounded-[30px] border border-white/10 bg-slate-900/70 p-6 shadow-[0_30px_90px_-50px_rgba(8,145,178,0.65)] transition hover:-translate-y-1 hover:border-cyan-300/30 hover:bg-slate-900">
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center gap-3">
-            <p className="text-2xl font-semibold tracking-tight text-slate-50">
-              {asset.asset_name}
+    <article className="premium-card group relative overflow-hidden rounded-2xl p-6">
+      {/* Animated corner glow — top right */}
+      <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(115,158,201,0.12),transparent_65%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      {/* Bottom left warm accent */}
+      <div className="pointer-events-none absolute -bottom-6 -left-6 h-20 w-20 rounded-full bg-[radial-gradient(circle,rgba(255,232,219,0.06),transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+      <div className="relative">
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2.5">
+              {/* Ticker chip */}
+              <span className="ticker-chip">{asset.asset_name}</span>
+              <AssetDirectionBadge direction={asset.direction} />
+            </div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">
+              {asset.asset_type}
             </p>
-            <AssetDirectionBadge direction={asset.direction} />
           </div>
-          <p className="text-sm uppercase tracking-[0.18em] text-slate-400">{asset.asset_type}</p>
+
+          {/* Score */}
+          <div className="text-right">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">
+              Score
+            </p>
+            <p className="mono-num mt-1 text-2xl font-black gradient-text-static">
+              {formatNumber(asset.asset_score)}
+            </p>
+          </div>
         </div>
-        <div className="text-right">
-          <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Asset score</p>
-          <p className="text-3xl font-semibold text-cyan-200">{formatNumber(asset.asset_score)}</p>
+
+        {/* Narrative */}
+        <p className="mt-4 text-[13px] leading-[1.8] text-[rgb(var(--text-tertiary))]">
+          {getSignalNarrative(asset)}
+        </p>
+
+        {/* Signal meters */}
+        <div className="mt-5 grid gap-3.5 md:grid-cols-2">
+          <SignalMeter label="Confidence" tone="blue" value={asset.confidence} />
+          <SignalMeter label="Disagreement" tone="amber" value={asset.disagreement} />
         </div>
-      </div>
-      <p className="mt-4 text-sm leading-7 text-slate-300">{getSignalNarrative(asset)}</p>
-      <div className="mt-5 grid gap-4 md:grid-cols-2">
-        <SignalMeter label="Confidence" tone="emerald" value={asset.confidence} />
-        <SignalMeter label="Disagreement" tone="amber" value={asset.disagreement} />
-      </div>
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5 text-sm text-slate-300">
-        <div className="flex flex-wrap gap-4">
-          <span>Activity {formatCompactNumber(asset.abs_sum)}</span>
-          <span>Events {asset.event_count}</span>
-          <span>Updated {formatTimestamp(asset.updated_at)}</span>
+
+        {/* Footer row */}
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[rgba(86,130,177,0.08)] pt-5">
+          <div className="flex flex-wrap gap-4 text-[12px] text-[rgb(var(--text-tertiary))]">
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[rgb(var(--accent-secondary))] opacity-70" />
+              <span>Activity {formatCompactNumber(asset.abs_sum)}</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-[rgba(255,232,219,0.5)]" />
+              <span>Events {asset.event_count}</span>
+            </span>
+            <span className="text-[rgb(var(--text-tertiary))] opacity-70">
+              {formatTimestamp(asset.updated_at)}
+            </span>
+          </div>
+          <Link
+            href={`/assets/${encodeURIComponent(asset.asset_name)}`}
+            className="group/link flex items-center gap-1.5 text-[13px] font-semibold text-[rgb(var(--accent-secondary))] transition-all duration-300 hover:text-[rgba(255,232,219,0.9)]"
+          >
+            <span>View asset</span>
+            <svg
+              className="transition-transform duration-300 group-hover/link:translate-x-1"
+              width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
-        <Link
-          href={`/assets/${encodeURIComponent(asset.asset_name)}`}
-          className="font-medium text-cyan-200 transition group-hover:text-cyan-100"
-        >
-          View asset
-        </Link>
       </div>
     </article>
   );

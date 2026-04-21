@@ -13,52 +13,52 @@ type EventTableProps = {
 
 export function EventTable({ events }: EventTableProps) {
   return (
-    <div className="overflow-hidden rounded-[30px] border border-white/10 bg-slate-900/60 shadow-[0_30px_100px_-60px_rgba(14,165,233,0.8)]">
+    <div className="glass-card-static overflow-hidden rounded-2xl">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-white/10 text-left">
-          <thead className="bg-white/5 text-xs uppercase tracking-[0.2em] text-slate-400">
+        <table className="data-table min-w-full text-left">
+          <thead>
             <tr>
-              <th className="px-6 py-4 font-medium">Event</th>
-              <th className="px-6 py-4 font-medium">Type / region</th>
-              <th className="px-6 py-4 font-medium">Certainty</th>
-              <th className="px-6 py-4 font-medium">Severity</th>
-              <th className="px-6 py-4 font-medium">Confidence</th>
-              <th className="px-6 py-4 font-medium">Impacted assets</th>
-              <th className="px-6 py-4 font-medium">Event time</th>
-              <th className="px-6 py-4 font-medium">Source</th>
+              <th>Event</th>
+              <th>Type / region</th>
+              <th>Certainty</th>
+              <th>Severity</th>
+              <th>Confidence</th>
+              <th>Impacted assets</th>
+              <th>Event time</th>
+              <th>Source</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5 text-sm text-slate-200">
+          <tbody>
             {events.map((event) => (
-              <tr key={event.id} className="hover:bg-white/5">
-                <td className="px-6 py-5">
+              <tr key={event.id}>
+                <td>
                   <div className="space-y-1">
-                    <p className="font-semibold text-white">
+                    <p className="font-semibold text-[rgb(var(--text-primary))]">
                       {event.event_headline ?? event.article?.headline ?? "Untitled event"}
                     </p>
-                    <p className="text-xs text-slate-400">{getEventNarrative(event)}</p>
+                    <p className="text-xs text-[rgb(var(--text-tertiary))]">{getEventNarrative(event)}</p>
                   </div>
                 </td>
-                <td className="px-6 py-5 text-slate-300">
+                <td>
                   {formatEventTypeLabel(event.event_type)} / {formatRegionLabel(event.region_of_effect)}
                 </td>
-                <td className="px-6 py-5 text-slate-300">{event.certainty}</td>
-                <td className="px-6 py-5 text-slate-300">{formatPercent(event.event_severity)}</td>
-                <td className="px-6 py-5 text-slate-300">{formatPercent(event.event_confidence)}</td>
-                <td className="px-6 py-5 text-slate-300">{event.impacted_assets_count}</td>
-                <td className="px-6 py-5 text-slate-300">{formatTimestamp(event.event_time)}</td>
-                <td className="px-6 py-5 text-slate-300">
+                <td>{event.certainty}</td>
+                <td>{formatPercent(event.event_severity)}</td>
+                <td>{formatPercent(event.event_confidence)}</td>
+                <td>{event.impacted_assets_count}</td>
+                <td>{formatTimestamp(event.event_time)}</td>
+                <td>
                   {event.article?.url ? (
                     <Link
                       href={event.article.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-medium text-cyan-200 transition hover:text-cyan-100"
+                      className="font-medium text-[rgb(var(--accent-primary))] transition-colors duration-300 hover:text-[rgb(var(--accent-tertiary))]"
                     >
-                      Open article
+                      Open ↗
                     </Link>
                   ) : (
-                    "Unavailable"
+                    <span className="text-[rgb(var(--text-tertiary))]">—</span>
                   )}
                 </td>
               </tr>

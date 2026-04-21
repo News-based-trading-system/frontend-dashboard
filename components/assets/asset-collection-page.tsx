@@ -41,53 +41,63 @@ export function AssetCollectionPage({
 
   return (
     <div className="space-y-8">
-      <div className="rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.22),_transparent_45%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(12,20,36,0.88))] p-8 shadow-[0_50px_120px_-70px_rgba(34,211,238,0.55)] md:p-10">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="space-y-6">
+      {/* Minimal Hero Section */}
+      <div className="relative pb-10 pt-8">
+        <div className="relative grid gap-16 lg:grid-cols-[1.5fr_1fr]">
+          <div className="space-y-10">
             <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-            <div className="grid gap-4 sm:grid-cols-3">
-              <MetricCard
-                label="Visible assets"
-                value={assets.length.toString()}
-                hint="Rows currently matching this view and the public display gate."
-              />
-              <MetricCard
-                label="Avg confidence"
-                value={formatPercent(averageConfidence)}
-                hint="Average conviction across the visible opportunity set."
-              />
-              <MetricCard
-                label="Bullish share"
-                value={`${bullishCount}`}
-                hint="Assets in this slice currently leaning bullish."
-              />
+            
+            {/* Minimal Stats Row */}
+            <div className="grid grid-cols-3 gap-6 divide-x divide-white/[0.04]">
+              <div className="pl-0">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Visible assets</p>
+                <p className="mono-num mt-2 text-2xl font-light text-white">{assets.length}</p>
+              </div>
+              <div className="pl-6">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Avg confidence</p>
+                <p className="mono-num mt-2 text-2xl font-light text-white">{formatPercent(averageConfidence)}</p>
+              </div>
+              <div className="pl-6">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Bullish share</p>
+                <p className="mono-num mt-2 text-2xl font-light text-white">{bullishCount}</p>
+              </div>
             </div>
           </div>
-          <div className="rounded-[30px] border border-white/10 bg-black/20 p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300/80">
-              Snapshot
-            </p>
-            <div className="mt-4 space-y-4 text-sm text-slate-300">
-              <p>
-                Current filters: <span className="text-slate-100">{filters.sort ?? "score"}</span>
-                {filters.search ? `, search "${filters.search}"` : ""}
-                {filters.direction ? `, ${filters.direction}` : ""}
-                {filters.type ? `, ${filters.type}` : ""}
+
+          <div className="space-y-6 pt-2">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-6 bg-[rgb(var(--accent-secondary))]" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[rgb(var(--accent-secondary))]">
+                View Snapshot
               </p>
-              <p>Last refreshed signal: {formatTimestamp(freshest)}</p>
-              {leadAsset ? (
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Lead asset</p>
-                  <p className="mt-2 text-xl font-semibold text-slate-50">{leadAsset.asset_name}</p>
-                  <p className="mt-1 text-slate-300">{leadAsset.asset_type}</p>
+            </div>
+            <div className="space-y-6 text-[13px] font-light text-[rgb(var(--text-tertiary))]">
+              <p>
+                Sort: <span className="font-medium text-white">{filters.sort ?? "score"}</span>
+                {filters.search ? <> · search <span className="font-medium text-white">"{filters.search}"</span></> : ""}
+                {filters.direction ? <> · <span className="font-medium text-white">{filters.direction}</span></> : ""}
+                {filters.type ? <> · <span className="font-medium text-white">{filters.type}</span></> : ""}
+                <br/>
+                <span className="mt-1 block">Last refreshed: {formatTimestamp(freshest)}</span>
+              </p>
+
+              {leadAsset && (
+                <div className="border-l border-[rgba(115,158,201,0.2)] pl-4">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Lead asset</p>
+                  <div className="mt-2 flex items-center gap-3">
+                    <p className="ticker-chip inline-flex">{leadAsset.asset_name}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-[rgb(var(--text-tertiary))]">{leadAsset.asset_type}</p>
+                  </div>
                 </div>
-              ) : null}
+              )}
               {accent}
             </div>
           </div>
         </div>
       </div>
+
       <AssetFilters allowDirection={allowDirection} allowType={allowType} />
+
       {leadAsset ? (
         <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
           <AssetCard asset={leadAsset} />

@@ -35,10 +35,16 @@ const formatContributionState = (row: AssetExplainabilityRow) => {
   return "active";
 };
 
+const stateStyles: Record<string, string> = {
+  active: "bg-[rgba(var(--bullish),0.08)] border-[rgba(var(--bullish),0.15)] text-[rgb(var(--bullish))]",
+  inactive: "bg-white/[0.03] border-white/[0.06] text-[rgb(var(--text-tertiary))]",
+  "event decayed": "bg-[rgba(var(--warning),0.06)] border-[rgba(var(--warning),0.12)] text-[rgb(var(--warning))]",
+};
+
 export function AssetExplainabilityTable({ rows }: AssetExplainabilityTableProps) {
   if (rows.length === 0) {
     return (
-      <div className="mt-6 rounded-2xl border border-dashed border-white/10 bg-white/5 px-5 py-8 text-sm text-slate-300">
+      <div className="mt-6 glass-card-static rounded-xl border-dashed px-5 py-10 text-center text-sm text-[rgb(var(--text-tertiary))]">
         No contribution-level rows are currently available for this asset.
       </div>
     );
@@ -46,70 +52,73 @@ export function AssetExplainabilityTable({ rows }: AssetExplainabilityTableProps
 
   return (
     <div className="mt-6 space-y-4">
-      {rows.map((row) => (
-        <article
-          key={`${row.contribution.event_id}-${row.contribution.asset_key}`}
-          className="rounded-2xl border border-white/10 bg-white/5 p-4"
-        >
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold text-slate-100">{formatEventLabel(row)}</p>
-              <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-500">
-                {row.event?.event_type ?? "unknown type"} - {row.event?.certainty ?? "unknown certainty"}
+      {rows.map((row) => {
+        const state = formatContributionState(row);
+        return (
+          <article
+            key={`${row.contribution.event_id}-${row.contribution.asset_key}`}
+            className="glass-card rounded-xl p-4"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-[rgb(var(--text-primary))]">{formatEventLabel(row)}</p>
+                <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--text-tertiary))]">
+                  {row.event?.event_type ?? "unknown type"} — {row.event?.certainty ?? "unknown certainty"}
+                </p>
+              </div>
+              <p className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${stateStyles[state] || stateStyles.inactive}`}>
+                {state}
               </p>
             </div>
-            <p className="rounded-full border border-white/15 bg-slate-950/60 px-3 py-1 text-xs uppercase tracking-[0.14em] text-slate-300">
-              {formatContributionState(row)}
-            </p>
-          </div>
 
-          <dl className="mt-4 grid gap-3 text-xs text-slate-300 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-xl border border-white/10 bg-slate-950/50 px-3 py-3">
-              <dt className="uppercase tracking-[0.14em] text-slate-500">Current impact</dt>
-              <dd className="mt-2 text-sm font-semibold text-slate-100">
-                {formatSignedNumber(row.contribution.current_contribution)}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-slate-950/50 px-3 py-3">
-              <dt className="uppercase tracking-[0.14em] text-slate-500">Original impact</dt>
-              <dd className="mt-2 text-sm font-semibold text-slate-100">
-                {formatSignedNumber(row.contribution.initial_contribution)}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-slate-950/50 px-3 py-3">
-              <dt className="uppercase tracking-[0.14em] text-slate-500">Severity / confidence</dt>
-              <dd className="mt-2 text-sm font-semibold text-slate-100">
-                {row.event ? `${formatPercent(row.event.event_severity)} / ${formatPercent(row.event.event_confidence)}` : "Unavailable"}
-              </dd>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-slate-950/50 px-3 py-3">
-              <dt className="uppercase tracking-[0.14em] text-slate-500">Event time</dt>
-              <dd className="mt-2 text-sm font-semibold text-slate-100">
-                {formatTimestamp(row.contribution.event_time)}
-              </dd>
-            </div>
-          </dl>
+            <dl className="mt-4 grid gap-3 text-xs text-[rgb(var(--text-tertiary))] sm:grid-cols-2 xl:grid-cols-4">
+              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
+                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Current impact</dt>
+                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
+                  {formatSignedNumber(row.contribution.current_contribution)}
+                </dd>
+              </div>
+              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
+                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Original impact</dt>
+                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
+                  {formatSignedNumber(row.contribution.initial_contribution)}
+                </dd>
+              </div>
+              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
+                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Severity / confidence</dt>
+                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
+                  {row.event ? `${formatPercent(row.event.event_severity)} / ${formatPercent(row.event.event_confidence)}` : "Unavailable"}
+                </dd>
+              </div>
+              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
+                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Event time</dt>
+                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
+                  {formatTimestamp(row.contribution.event_time)}
+                </dd>
+              </div>
+            </dl>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-300">
-            <span>Region {row.event?.region_of_effect ?? "unknown"}</span>
-            <span>Arrival {formatTimestamp(row.contribution.arrival_time)}</span>
-            <span>Updated {formatTimestamp(row.contribution.updated_at)}</span>
-            {row.contribution.duplicate_group_key ? (
-              <span>Duplicate group {row.contribution.duplicate_group_key}</span>
-            ) : null}
-            {row.article?.url ? (
-              <Link
-                href={row.article.url}
-                target="_blank"
-                rel="noreferrer"
-                className="font-medium text-cyan-200 transition hover:text-cyan-100"
-              >
-                Source article
-              </Link>
-            ) : null}
-          </div>
-        </article>
-      ))}
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[rgb(var(--text-tertiary))]">
+              <span>Region {row.event?.region_of_effect ?? "unknown"}</span>
+              <span>Arrival {formatTimestamp(row.contribution.arrival_time)}</span>
+              <span>Updated {formatTimestamp(row.contribution.updated_at)}</span>
+              {row.contribution.duplicate_group_key ? (
+                <span>Duplicate group {row.contribution.duplicate_group_key}</span>
+              ) : null}
+              {row.article?.url ? (
+                <Link
+                  href={row.article.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-[rgb(var(--accent-primary))] transition-colors duration-300 hover:text-[rgb(var(--accent-tertiary))]"
+                >
+                  Source article ↗
+                </Link>
+              ) : null}
+            </div>
+          </article>
+        );
+      })}
     </div>
   );
 }

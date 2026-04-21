@@ -43,76 +43,79 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
 
   return (
     <div className="space-y-10 pb-12">
-      <div className="rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.2),_transparent_34%),linear-gradient(135deg,rgba(8,15,28,0.96),rgba(15,23,42,0.92))] p-8 md:p-10">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* Hero */}
+      <div className="hero-glow relative overflow-hidden rounded-3xl glass-card-static p-8 md:p-10">
+        <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[rgba(var(--accent-primary),0.4)] to-transparent" />
+
+        <div className="relative flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-4">
-            <Link href="/dashboard" className="text-sm text-cyan-200 transition hover:text-cyan-100">
+            <Link href="/dashboard" className="group inline-flex items-center gap-2 text-sm text-[rgb(var(--accent-primary))] transition-colors duration-300 hover:text-[rgb(var(--accent-tertiary))]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:-translate-x-1">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
               Back to dashboard
             </Link>
             <div className="flex flex-wrap items-center gap-4">
-              <h1 className="text-4xl font-semibold tracking-tight text-slate-50 md:text-5xl">
+              <h1 className="text-4xl font-extrabold tracking-tight text-[rgb(var(--text-primary))] md:text-5xl">
                 {asset.asset_name}
               </h1>
               <AssetDirectionBadge direction={asset.direction} />
             </div>
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">{asset.asset_type}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">{asset.asset_type}</p>
           </div>
-          <div className="rounded-[28px] border border-white/10 bg-black/20 px-6 py-5 text-right">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Asset score</p>
-            <p className="mt-2 text-4xl font-semibold text-cyan-200">{formatNumber(asset.asset_score)}</p>
+          <div className="glass-card-static rounded-2xl px-6 py-5 text-right">
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Asset score</p>
+            <p className="mt-2 text-4xl font-extrabold gradient-text-static">{formatNumber(asset.asset_score)}</p>
           </div>
         </div>
-        <p className="mt-8 max-w-3xl text-base leading-8 text-slate-300">{getSignalNarrative(asset)}</p>
+        <p className="relative mt-8 max-w-3xl text-base leading-8 text-[rgb(var(--text-tertiary))]">{getSignalNarrative(asset)}</p>
       </div>
 
+      {/* Metric cards */}
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Confidence</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-50">{formatPercent(asset.confidence)}</p>
+        <div className="glass-card rounded-2xl p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Confidence</p>
+          <p className="mt-3 text-3xl font-bold text-[rgb(var(--text-primary))]">{formatPercent(asset.confidence)}</p>
         </div>
-        <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Disagreement</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-50">{formatPercent(asset.disagreement)}</p>
+        <div className="glass-card rounded-2xl p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Disagreement</p>
+          <p className="mt-3 text-3xl font-bold text-[rgb(var(--text-primary))]">{formatPercent(asset.disagreement)}</p>
         </div>
-        <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Activity / events</p>
-          <p className="mt-3 text-3xl font-semibold text-slate-50">
+        <div className="glass-card rounded-2xl p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Activity / events</p>
+          <p className="mt-3 text-3xl font-bold text-[rgb(var(--text-primary))]">
             {formatCompactNumber(asset.abs_sum)} / {asset.event_count}
           </p>
         </div>
-        <div className="rounded-[28px] border border-white/10 bg-white/5 p-5">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Updated</p>
-          <p className="mt-3 text-lg font-semibold text-slate-50">{formatTimestamp(asset.updated_at)}</p>
+        <div className="glass-card rounded-2xl p-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Updated</p>
+          <p className="mt-3 text-lg font-bold text-[rgb(var(--text-primary))]">{formatTimestamp(asset.updated_at)}</p>
         </div>
       </section>
 
+      {/* Signal profile + Explainability */}
       <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <div className="rounded-[30px] border border-white/10 bg-slate-900/60 p-6">
+        <div className="glass-card-static rounded-2xl p-6">
           <SectionHeading
             eyebrow="Why it stands out"
             title="Signal profile"
             description="A clean breakdown of the underlying public metrics behind this asset's visibility."
           />
-          <dl className="mt-6 grid gap-4 text-sm text-slate-300">
-            <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-              <dt>Bull sum</dt>
-              <dd className="font-medium text-slate-100">{formatSignedNumber(asset.bull_sum)}</dd>
-            </div>
-            <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-              <dt>Bear sum</dt>
-              <dd className="font-medium text-slate-100">{formatSignedNumber(asset.bear_sum)}</dd>
-            </div>
-            <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-              <dt>Latest event ID</dt>
-              <dd className="font-mono text-xs text-slate-100">{formatEventId(asset.latest_event_id)}</dd>
-            </div>
-            <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
-              <dt>Last event time</dt>
-              <dd className="font-medium text-slate-100">{formatTimestamp(asset.last_event_time)}</dd>
-            </div>
+          <dl className="mt-6 grid gap-3 text-sm text-[rgb(var(--text-tertiary))]">
+            {[
+              { label: "Bull sum", value: formatSignedNumber(asset.bull_sum) },
+              { label: "Bear sum", value: formatSignedNumber(asset.bear_sum) },
+              { label: "Latest event ID", value: formatEventId(asset.latest_event_id), mono: true },
+              { label: "Last event time", value: formatTimestamp(asset.last_event_time) },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-[rgba(var(--surface-0),0.4)] px-4 py-4 transition-all duration-300 hover:border-[rgba(var(--accent-primary),0.1)]">
+                <dt>{item.label}</dt>
+                <dd className={`font-semibold text-[rgb(var(--text-primary))] ${item.mono ? "font-mono text-xs" : ""}`}>{item.value}</dd>
+              </div>
+            ))}
           </dl>
         </div>
-        <div className="rounded-[30px] border border-white/10 bg-slate-900/60 p-6">
+        <div className="glass-card-static rounded-2xl p-6">
           <SectionHeading
             eyebrow="Signal explainability"
             title="How each event contributes"
@@ -122,6 +125,7 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
         </div>
       </section>
 
+      {/* Related assets */}
       {relatedAssets.length > 0 ? (
         <section className="space-y-6">
           <SectionHeading

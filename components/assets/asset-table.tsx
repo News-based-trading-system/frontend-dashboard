@@ -14,46 +14,48 @@ type AssetTableProps = {
 
 export function AssetTable({ assets }: AssetTableProps) {
   return (
-    <div className="overflow-hidden rounded-[30px] border border-white/10 bg-slate-900/60 shadow-[0_30px_100px_-60px_rgba(14,165,233,0.8)]">
+    <div className="glass-card-static overflow-hidden rounded-2xl border border-[rgba(86,130,177,0.1)]">
+      {/* Table header top border */}
+      <div className="h-px bg-gradient-to-r from-transparent via-[rgba(255,232,219,0.4)] to-transparent" />
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-white/10 text-left">
-          <thead className="bg-white/5 text-xs uppercase tracking-[0.2em] text-slate-400">
+        <table className="data-table min-w-full text-left">
+          <thead>
             <tr>
-              <th className="px-6 py-4 font-medium">Asset</th>
-              <th className="px-6 py-4 font-medium">Type</th>
-              <th className="px-6 py-4 font-medium">Signal</th>
-              <th className="px-6 py-4 font-medium">Confidence</th>
-              <th className="px-6 py-4 font-medium">Activity</th>
-              <th className="px-6 py-4 font-medium">Last event</th>
-              <th className="px-6 py-4 font-medium">Updated</th>
+              <th>Asset</th>
+              <th>Type</th>
+              <th>Signal</th>
+              <th>Confidence</th>
+              <th>Activity</th>
+              <th>Last event</th>
+              <th>Updated</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5 text-sm text-slate-200">
-            {assets.map((asset) => (
-              <tr key={asset.asset_name} className="hover:bg-white/5">
-                <td className="px-6 py-5">
-                  <div className="space-y-1">
+          <tbody>
+            {assets.map((asset, i) => (
+              <tr key={asset.asset_name} style={{ animationDelay: `${i * 0.04}s` }}>
+                <td>
+                  <div className="space-y-0.5">
                     <Link
                       href={`/assets/${encodeURIComponent(asset.asset_name)}`}
-                      className="font-semibold text-white transition hover:text-cyan-200"
+                      className="ticker-chip transition-all duration-300 hover:border-[rgba(115,158,201,0.4)] hover:bg-[rgba(86,130,177,0.14)]"
                     >
                       {asset.asset_name}
                     </Link>
-                    <p className="text-xs uppercase tracking-[0.16em] text-slate-500">
+                    <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--text-tertiary))]">
                       Score {formatNumber(asset.asset_score)}
                     </p>
                   </div>
                 </td>
-                <td className="px-6 py-5 text-slate-300">{asset.asset_type}</td>
-                <td className="px-6 py-5">
+                <td className="text-[rgb(var(--text-tertiary))] text-xs uppercase tracking-wider">{asset.asset_type}</td>
+                <td>
                   <AssetDirectionBadge direction={asset.direction} />
                 </td>
-                <td className="px-6 py-5 text-slate-200">{formatPercent(asset.confidence)}</td>
-                <td className="px-6 py-5 text-slate-300">
-                  {formatCompactNumber(asset.abs_sum)} / {asset.event_count} events
+                <td className="mono-num">{formatPercent(asset.confidence)}</td>
+                <td className="mono-num text-[rgb(var(--text-secondary))]">
+                  {formatCompactNumber(asset.abs_sum)} / {asset.event_count} ev
                 </td>
-                <td className="px-6 py-5 text-slate-300">{formatTimestamp(asset.last_event_time)}</td>
-                <td className="px-6 py-5 text-slate-300">{formatTimestamp(asset.updated_at)}</td>
+                <td className="text-[rgb(var(--text-tertiary))]">{formatTimestamp(asset.last_event_time)}</td>
+                <td className="text-[rgb(var(--text-tertiary))]">{formatTimestamp(asset.updated_at)}</td>
               </tr>
             ))}
           </tbody>

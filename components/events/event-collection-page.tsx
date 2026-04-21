@@ -40,46 +40,51 @@ export function EventCollectionPage({ events, filters }: EventCollectionPageProp
 
   return (
     <div className="space-y-8">
-      <div className="rounded-[36px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.22),_transparent_45%),linear-gradient(135deg,rgba(15,23,42,0.96),rgba(12,20,36,0.88))] p-8 shadow-[0_50px_120px_-70px_rgba(34,211,238,0.55)] md:p-10">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="space-y-6">
+      {/* Minimal Hero Section */}
+      <div className="relative pb-10 pt-8">
+        <div className="relative grid gap-16 lg:grid-cols-[1.5fr_1fr]">
+          <div className="space-y-10">
             <SectionHeading
               eyebrow="Live events"
               title="Event stream grouped by type and region"
               description="This screen keeps active market events front and center with severity, confidence, and source context attached."
             />
-            <div className="grid gap-4 sm:grid-cols-3">
-              <MetricCard
-                label="Visible events"
-                value={events.length.toString()}
-                hint="Rows currently matching this event view."
-              />
-              <MetricCard
-                label="Live events"
-                value={activeCount.toString()}
-                hint="Events still active in decay logic."
-              />
-              <MetricCard
-                label="Avg severity"
-                value={`${Math.round(avgSeverity * 100)}%`}
-                hint="Average intensity of currently visible events."
-              />
+            
+            {/* Minimal Stats Row */}
+            <div className="grid grid-cols-3 gap-6 divide-x divide-white/[0.04]">
+              <div className="pl-0">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Visible events</p>
+                <p className="mono-num mt-2 text-2xl font-light text-white">{events.length}</p>
+              </div>
+              <div className="pl-6">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Live events</p>
+                <p className="mono-num mt-2 text-2xl font-light text-white">{activeCount}</p>
+              </div>
+              <div className="pl-6">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Avg severity</p>
+                <p className="mono-num mt-2 text-2xl font-light text-white">{Math.round(avgSeverity * 100)}%</p>
+              </div>
             </div>
           </div>
-          <div className="rounded-[30px] border border-white/10 bg-black/20 p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300/80">
-              Snapshot
-            </p>
-            <div className="mt-4 space-y-4 text-sm text-slate-300">
-              <p>
-                Current filters: <span className="text-slate-100">{filters.sort ?? "latest"}</span>
-                {filters.search ? `, search "${filters.search}"` : ""}
-                {filters.eventType ? `, type ${filters.eventType}` : ""}
-                {filters.region ? `, region ${filters.region}` : ""}
-                {filters.certainty ? `, ${filters.certainty}` : ""}
+
+          <div className="space-y-6 pt-2">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-6 bg-[rgb(var(--accent-secondary))]" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[rgb(var(--accent-secondary))]">
+                View Snapshot
               </p>
-              <p>Average confidence: {Math.round(avgConfidence * 100)}%</p>
-              <p>Unique regions: {regions.length}</p>
+            </div>
+            <div className="space-y-6 text-[13px] font-light text-[rgb(var(--text-tertiary))]">
+              <p>
+                Sort: <span className="font-medium text-white">{filters.sort ?? "latest"}</span>
+                {filters.search ? <> · search <span className="font-medium text-white">"{filters.search}"</span></> : ""}
+                {filters.eventType ? <> · type <span className="font-medium text-white">{filters.eventType}</span></> : ""}
+                {filters.region ? <> · region <span className="font-medium text-white">{filters.region}</span></> : ""}
+                {filters.certainty ? <> · <span className="font-medium text-white">{filters.certainty}</span></> : ""}
+                <br/>
+                <span className="mt-1 block">Avg confidence: {Math.round(avgConfidence * 100)}%</span>
+                <span className="mt-1 block">Unique regions: {regions.length}</span>
+              </p>
             </div>
           </div>
         </div>
@@ -88,14 +93,15 @@ export function EventCollectionPage({ events, filters }: EventCollectionPageProp
       <EventFilters regionOptions={regions} />
 
       {groupedEntries.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/10 bg-white/5 px-5 py-8 text-sm text-slate-300">
+        <div className="glass-card-static rounded-xl border-dashed px-5 py-10 text-center text-sm text-[rgb(var(--text-tertiary))]">
           No events match the current filters.
         </div>
       ) : (
         <div className="space-y-6">
           {groupedEntries.map(([groupLabel, groupEvents]) => (
             <section key={groupLabel} className="space-y-3">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+              <h2 className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-[rgb(var(--accent-primary))]" />
                 {groupLabel} ({groupEvents.length})
               </h2>
               <EventTable events={groupEvents} />

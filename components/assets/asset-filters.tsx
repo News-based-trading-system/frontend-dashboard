@@ -66,27 +66,32 @@ export function AssetFilters({
   };
 
   return (
-    <div className="grid gap-4 rounded-[30px] border border-white/10 bg-slate-900/60 p-5 md:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))]">
-      <label className="space-y-2 text-sm text-slate-300">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+    <div className="glass-card-static grid gap-4 rounded-2xl p-5 md:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))]">
+      <label className="space-y-2">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">
           Search assets
         </span>
-        <input
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search by asset name"
-          className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none ring-0 transition placeholder:text-slate-500 focus:border-cyan-300/40"
-        />
+        <div className="relative">
+          <svg className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[rgb(var(--text-tertiary))]" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search by asset name"
+            className="form-input pl-10"
+          />
+        </div>
       </label>
       {allowType ? (
-        <label className="space-y-2 text-sm text-slate-300">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+        <label className="space-y-2">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">
             Asset type
           </span>
           <select
             value={params.get("type") ?? ""}
             onChange={(event) => updateParam("type", event.target.value as AssetTypeRoute | "")}
-            className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none focus:border-cyan-300/40"
+            className="form-select"
           >
             <option value="">All types</option>
             {typeOptions.map((type) => (
@@ -98,14 +103,14 @@ export function AssetFilters({
         </label>
       ) : null}
       {allowDirection ? (
-        <label className="space-y-2 text-sm text-slate-300">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+        <label className="space-y-2">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">
             Direction
           </span>
           <select
             value={params.get("direction") ?? ""}
             onChange={(event) => updateParam("direction", event.target.value as AssetDirection | "")}
-            className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none focus:border-cyan-300/40"
+            className="form-select"
           >
             <option value="">All signals</option>
             <option value="bullish">bullish</option>
@@ -114,14 +119,14 @@ export function AssetFilters({
           </select>
         </label>
       ) : null}
-      <label className="space-y-2 text-sm text-slate-300">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+      <label className="space-y-2">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">
           Sort by
         </span>
         <select
           value={params.get("sort") ?? "score"}
           onChange={(event) => updateParam("sort", event.target.value as AssetSortKey)}
-          className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-slate-100 outline-none focus:border-cyan-300/40"
+          className="form-select"
         >
           <option value="score">score</option>
           <option value="confidence">confidence</option>

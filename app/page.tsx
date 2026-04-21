@@ -3,164 +3,181 @@ import { AssetCard } from "../components/assets/asset-card";
 import { AssetTable } from "../components/assets/asset-table";
 import { MetricCard } from "../components/metric-card";
 import { SectionHeading } from "../components/section-heading";
+import { ScrollReveal } from "../components/scroll-reveal";
 import { getLandingData } from "../utils/assets";
 
 const platformPillars = [
   {
-    title: "Curated over noisy",
-    description:
-      "Only public-ready rows make it through. The experience is intentionally selective, not an undifferentiated screener.",
+    title: "Curated Over Noisy",
+    description: "Only public-ready rows make it through. Intentionally selective, never an undifferentiated screener.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" />
+      </svg>
+    ),
   },
   {
-    title: "Directional context",
-    description:
-      "Momentum, confidence, disagreement, and activity are surfaced together so a move never appears without context.",
+    title: "Directional Context",
+    description: "Momentum, confidence, disagreement, and activity surfaced together. A move never appears without context.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+      </svg>
+    ),
   },
   {
-    title: "Built for fast reading",
-    description:
-      "Every section is optimized for scanability, with quick segmentation by direction, recency, and asset type.",
+    title: "Minimal Distraction",
+    description: "Every section is optimized for scanability and pure signal extraction. Aesthetics meet utility.",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" />
+      </svg>
+    ),
   },
 ];
 
 export default async function Home() {
-  const { featured, bullish, bearish, latest, metrics, assetTypeCounts } =
-    await getLandingData();
+  const { featured, bullish, bearish, latest, metrics, assetTypeCounts } = await getLandingData();
 
   return (
-    <div className="space-y-20 pb-12">
-      <section className="rounded-[40px] border border-white/10 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.22),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(15,118,110,0.16),_transparent_32%),linear-gradient(135deg,rgba(8,15,28,0.96),rgba(12,20,36,0.86))] px-6 py-16 shadow-[0_60px_130px_-80px_rgba(34,211,238,0.65)] md:px-10 md:py-20">
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-          <div className="space-y-8">
-            <div className="space-y-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300/80">
-                Curated asset intelligence
-              </p>
-              <h1 className="max-w-4xl text-4xl font-semibold tracking-tight text-white md:text-6xl md:leading-[1.05]">
-                Discover the strongest asset moves with premium signal clarity.
-              </h1>
-              <p className="max-w-2xl text-base leading-8 text-slate-300 md:text-lg">
-                Asset Harbor turns raw asset analytics into a calm, trustworthy public experience for spotting directional conviction across stocks, ETFs, and commodities.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/dashboard"
-                className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-5 py-3 text-sm font-medium text-cyan-100 transition hover:border-cyan-200/50 hover:bg-cyan-300/20"
-              >
-                Explore dashboard
-              </Link>
-              <Link
-                href="/bullish"
-                className="rounded-full border border-white/10 px-5 py-3 text-sm font-medium text-slate-200 transition hover:border-white/20 hover:bg-white/5"
-              >
-                View bullish leaders
-              </Link>
-            </div>
-            <div className="grid gap-4 md:grid-cols-4">
-              {metrics.map((metric) => (
-                <MetricCard
-                  key={metric.label}
-                  label={metric.label}
-                  value={metric.value}
-                  hint={metric.hint}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="rounded-[34px] border border-white/10 bg-black/20 p-6 md:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300/80">
-              Coverage snapshot
-            </p>
-            <div className="mt-6 space-y-4">
-              <div className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200">
-                <span>Stocks</span>
-                <span>{assetTypeCounts.stocks}</span>
-              </div>
-              <div className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200">
-                <span>ETFs</span>
-                <span>{assetTypeCounts.etfs}</span>
-              </div>
-              <div className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-4 py-4 text-sm text-slate-200">
-                <span>Commodities</span>
-                <span>{assetTypeCounts.commodities}</span>
-              </div>
-            </div>
-            <p className="mt-6 text-sm leading-7 text-slate-300">
-              Every public segment is filtered through the same display gate so what users see stays focused, credible, and easy to interpret.
-            </p>
-          </div>
-        </div>
-      </section>
+    <div className="space-y-32 pb-24 md:space-y-48">
 
-      <section className="grid gap-6 lg:grid-cols-3">
-        {platformPillars.map((pillar) => (
-          <div
-            key={pillar.title}
-            className="rounded-[30px] border border-white/10 bg-white/5 p-6 backdrop-blur"
-          >
-            <h2 className="text-xl font-semibold text-slate-50">{pillar.title}</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-300">{pillar.description}</p>
+      {/* ──────── ULTRA-MINIMAL HERO ──────── */}
+      <section className="relative pt-20 pb-10 md:pt-32">
+        <ScrollReveal animation="float-up" className="mx-auto max-w-4xl text-center">
+          {/* Subtle Live Tag */}
+          <div className="mb-8 flex items-center justify-center gap-3">
+            <span className="signal-live" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[rgb(var(--accent-secondary))]">
+              Live Intelligence
+            </span>
+            <span className="h-px w-12 bg-gradient-to-r from-[rgba(115,158,201,0.5)] to-transparent" />
           </div>
-        ))}
-      </section>
 
-      <section className="space-y-6">
-        <SectionHeading
-          eyebrow="Featured opportunities"
-          title="High-activity assets with the strongest public visibility"
-          description="These names are rising to the top because their activity and signal alignment stand out right now."
-          actions={
-            <Link
-              href="/dashboard?sort=activity"
-              className="text-sm font-medium text-cyan-200 transition hover:text-cyan-100"
-            >
-              See full activity view
+          {/* Artistic Typography Hero */}
+          <h1 className="text-5xl font-light tracking-tight text-white md:text-7xl lg:text-[80px] lg:leading-[1.1]">
+            <span className="block text-[rgb(var(--text-tertiary))]">Signal clarity over</span>
+            <span className="bg-gradient-to-r from-[rgb(var(--accent-warm))] via-[rgb(var(--accent-secondary))] to-[rgb(var(--accent-primary))] bg-clip-text text-transparent font-normal">
+              market noise.
+            </span>
+          </h1>
+
+          <p className="mx-auto mt-10 max-w-2xl text-[15px] font-light leading-relaxed text-[rgb(var(--text-secondary))] md:text-lg">
+            Asset Harbor distills raw analytics into a serene, trustworthy experience for spotting directional conviction across global markets.
+          </p>
+
+          <div className="mt-14 flex flex-col items-center justify-center gap-6 sm:flex-row">
+            <Link href="/dashboard" className="btn-primary px-8 py-3.5 text-sm">
+              <span>Enter Dashboard</span>
             </Link>
-          }
-        />
-        <div className="grid gap-6 xl:grid-cols-2">
-          {featured.slice(0, 2).map((asset) => (
-            <AssetCard key={asset.asset_name} asset={asset} />
+            <Link href="/bullish" className="group flex items-center gap-2 text-sm text-[rgb(var(--text-tertiary))] transition-colors hover:text-[rgb(var(--accent-warm))]">
+              <span>View bullish leaders</span>
+              <span className="h-px w-4 bg-[rgb(var(--text-tertiary))] transition-all group-hover:w-8 group-hover:bg-[rgb(var(--accent-warm))]" />
+            </Link>
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* ──────── MINIMALIST STATS ROW ──────── */}
+      <section className="relative mx-auto max-w-5xl">
+        <ScrollReveal animation="blur-in" delay={0.2}>
+          <div className="grid grid-cols-2 gap-x-8 gap-y-12 md:grid-cols-4 divide-x divide-white/[0.04]">
+            {metrics.map((metric, i) => (
+              <div key={metric.label} className={`px-6 ${i === 0 ? "pl-0" : ""}`}>
+                <p className="text-[10px] uppercase tracking-[0.3em] text-[rgb(var(--text-tertiary))]">
+                  {metric.label}
+                </p>
+                <p className="mono-num mt-3 text-3xl font-light tracking-tighter text-white">
+                  {metric.value}
+                </p>
+              </div>
+            ))}
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* ──────── ELEGANT PILLARS ──────── */}
+      <section className="relative mx-auto max-w-6xl">
+        <div className="grid gap-16 md:grid-cols-3">
+          {platformPillars.map((pillar, index) => (
+            <ScrollReveal key={pillar.title} animation="float-up" delay={index * 0.15}>
+              <div className="group relative border-l border-[rgba(115,158,201,0.15)] pl-6 transition-colors hover:border-[rgb(var(--accent-warm))]">
+                <div className="mb-6 text-[rgb(var(--accent-secondary))] transition-colors group-hover:text-[rgb(var(--accent-warm))]">
+                  {pillar.icon}
+                </div>
+                <h2 className="text-sm font-medium tracking-wide text-white">{pillar.title}</h2>
+                <p className="mt-4 text-[13px] font-light leading-relaxed text-[rgb(var(--text-tertiary))]">
+                  {pillar.description}
+                </p>
+              </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
-      <section className="grid gap-8 xl:grid-cols-2">
-        <div className="space-y-6">
+      {/* ──────── FEATURED ──────── */}
+      <section className="space-y-10">
+        <ScrollReveal animation="slide-left">
           <SectionHeading
-            eyebrow="Bullish watchlist"
-            title="Positive conviction with public-ready confidence"
-            description="A curated slice of the strongest bullish setups visible right now."
+            eyebrow="Featured"
+            title="High-Activity Assets"
+            description="Rising to the top through activity and signal alignment."
+            actions={
+              <Link href="/dashboard?sort=activity" className="group flex items-center gap-2 text-xs uppercase tracking-widest text-[rgb(var(--accent-secondary))] hover:text-[rgb(var(--accent-warm))]">
+                <span>View All</span>
+                <svg className="transition-transform group-hover:translate-x-1" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              </Link>
+            }
           />
+        </ScrollReveal>
+        <div className="grid gap-6 xl:grid-cols-2">
+          {featured.slice(0, 2).map((asset, i) => (
+            <ScrollReveal key={asset.asset_name} animation="float-up" delay={i * 0.1}>
+              <AssetCard asset={asset} />
+            </ScrollReveal>
+          ))}
+        </div>
+      </section>
+
+      {/* ──────── DUAL LISTS ──────── */}
+      <section className="grid gap-16 xl:grid-cols-2 xl:gap-8">
+        <div className="space-y-10">
+          <ScrollReveal animation="slide-left">
+            <SectionHeading eyebrow="Conviction" title="Bullish Leaders" />
+          </ScrollReveal>
           <div className="grid gap-6">
-            {bullish.slice(0, 3).map((asset) => (
-              <AssetCard key={asset.asset_name} asset={asset} />
+            {bullish.slice(0, 3).map((asset, i) => (
+              <ScrollReveal key={asset.asset_name} animation="float-up" delay={i * 0.1}>
+                <AssetCard asset={asset} />
+              </ScrollReveal>
             ))}
           </div>
         </div>
-        <div className="space-y-6">
-          <SectionHeading
-            eyebrow="Bearish watchlist"
-            title="Downside pressure worth understanding early"
-            description="Curated bearish assets where confidence, activity, and urgency combine in useful ways."
-          />
+
+        <div className="space-y-10">
+          <ScrollReveal animation="slide-right">
+            <SectionHeading eyebrow="Pressure" title="Bearish Leaders" />
+          </ScrollReveal>
           <div className="grid gap-6">
-            {bearish.slice(0, 3).map((asset) => (
-              <AssetCard key={asset.asset_name} asset={asset} />
+            {bearish.slice(0, 3).map((asset, i) => (
+              <ScrollReveal key={asset.asset_name} animation="float-up" delay={i * 0.1}>
+                <AssetCard asset={asset} />
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="space-y-6">
-        <SectionHeading
-          eyebrow="Latest refresh"
-          title="Most recently updated curated signals"
-          description="Use this view to track which assets have been refreshed most recently by the analytics layer."
-        />
-        <AssetTable assets={latest} />
+      {/* ──────── LATEST TABLE ──────── */}
+      <section className="space-y-10 pb-10">
+        <ScrollReveal animation="float-up">
+          <SectionHeading eyebrow="Timeline" title="Latest Intelligence" />
+        </ScrollReveal>
+        <ScrollReveal animation="blur-in">
+          <AssetTable assets={latest} />
+        </ScrollReveal>
       </section>
+
     </div>
   );
 }
