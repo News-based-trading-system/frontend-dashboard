@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { formatPercent, formatTimestamp, normalizeDirection } from "../../utils/assets";
 import type { AssetQueryOptions, AssetScoreRecord } from "../../utils/assets";
 import { AssetFilters } from "./asset-filters";
-import { AssetTable } from "./asset-table";
 import { EmptyState } from "./empty-state";
 import { AssetCard } from "./asset-card";
 import { MetricCard } from "../metric-card";
@@ -43,7 +42,7 @@ export function AssetCollectionPage({
     <div className="space-y-8">
       {/* Minimal Hero Section */}
       <div className="relative pb-10 pt-8">
-        <div className="relative grid gap-16 lg:grid-cols-[1.5fr_1fr]">
+        <div className="relative">
           <div className="space-y-10">
             <SectionHeading eyebrow={eyebrow} title={title} description={description} />
             
@@ -63,45 +62,16 @@ export function AssetCollectionPage({
               </div>
             </div>
           </div>
-
-          <div className="space-y-6 pt-2">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-6 bg-[rgb(var(--accent-secondary))]" />
-              <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[rgb(var(--accent-secondary))]">
-                View Snapshot
-              </p>
-            </div>
-            <div className="space-y-6 text-[13px] font-light text-[rgb(var(--text-tertiary))]">
-              <p>
-                Sort: <span className="font-medium text-white">{filters.sort ?? "score"}</span>
-                {filters.search ? <> · search <span className="font-medium text-white">"{filters.search}"</span></> : ""}
-                {filters.direction ? <> · <span className="font-medium text-white">{filters.direction}</span></> : ""}
-                {filters.type ? <> · <span className="font-medium text-white">{filters.type}</span></> : ""}
-                <br/>
-                <span className="mt-1 block">Last refreshed: {formatTimestamp(freshest)}</span>
-              </p>
-
-              {leadAsset && (
-                <div className="border-l border-[rgba(115,158,201,0.2)] pl-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Lead asset</p>
-                  <div className="mt-2 flex items-center gap-3">
-                    <p className="ticker-chip inline-flex">{leadAsset.asset_name}</p>
-                    <p className="text-[10px] uppercase tracking-wider text-[rgb(var(--text-tertiary))]">{leadAsset.asset_type}</p>
-                  </div>
-                </div>
-              )}
-              {accent}
-            </div>
-          </div>
         </div>
       </div>
 
       <AssetFilters allowDirection={allowDirection} allowType={allowType} />
 
-      {leadAsset ? (
-        <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-          <AssetCard asset={leadAsset} />
-          <AssetTable assets={assets.slice(0, 10)} />
+      {assets.length > 0 ? (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {assets.map((asset) => (
+            <AssetCard key={asset.asset_name} asset={asset} />
+          ))}
         </div>
       ) : (
         <EmptyState
@@ -109,13 +79,6 @@ export function AssetCollectionPage({
           description="Try broadening the search or switch to a different segment to see the strongest curated opportunities."
         />
       )}
-      {assets.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {assets.slice(1, 7).map((asset) => (
-            <AssetCard key={asset.asset_name} asset={asset} />
-          ))}
-        </div>
-      ) : null}
     </div>
   );
 }

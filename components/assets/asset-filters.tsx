@@ -11,7 +11,7 @@ type AssetFiltersProps = {
 };
 
 export function AssetFilters({
-  typeOptions = ["stocks", "etfs", "commodities"],
+  typeOptions = ["stocks", "commodities"],
   allowDirection = true,
   allowType = true,
 }: AssetFiltersProps) {

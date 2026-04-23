@@ -41,7 +41,7 @@ export function AssetTable({ assets }: AssetTableProps) {
                     >
                       {asset.asset_name}
                     </Link>
-                    <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--text-tertiary))]">
+                    <p className={`mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${asset.direction === 'bullish' ? 'text-[rgb(var(--bullish))]' : asset.direction === 'bearish' ? 'text-[rgb(var(--bearish))]' : 'text-[rgb(var(--text-tertiary))]'}`}>
                       Score {formatNumber(asset.asset_score)}
                     </p>
                   </div>

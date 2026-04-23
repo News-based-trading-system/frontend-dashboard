@@ -10,7 +10,6 @@ const navigation = [
   { href: "/bullish",   label: "Bullish" },
   { href: "/bearish",   label: "Bearish" },
   { href: "/stocks",    label: "Stocks" },
-  { href: "/etfs",      label: "ETFs" },
   { href: "/commodities", label: "Commodities" },
 ];
 
@@ -46,17 +45,15 @@ export function SiteHeader() {
 
         {/* Logo */}
         <Link href="/" className="group flex items-center gap-3 flex-shrink-0">
-          {/* Logo mark */}
-          <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl">
-            {/* Outer glow */}
-            <span className="absolute inset-0 bg-gradient-to-br from-[rgba(115,158,201,0.3)] to-[rgba(86,130,177,0.15)] transition-opacity duration-300 group-hover:opacity-80" />
-            {/* Inner dark bg */}
-            <span className="absolute inset-[1px] rounded-[11px] bg-black" />
-            {/* Letters */}
-            <span className="gradient-text-static relative text-[13px] font-black">AH</span>
-            {/* Corner accent */}
-            <span className="absolute right-[3px] top-[3px] h-1 w-1 rounded-full bg-[rgba(255,232,219,0.8)]" />
-          </span>
+          <div className="relative flex h-10 w-10 items-center justify-center">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[rgb(var(--accent-secondary))] transition-all duration-[1.5s] ease-in-out group-hover:rotate-90 group-hover:scale-105">
+              <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
+              <circle cx="20" cy="20" r="12" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.4" strokeDasharray="3 3" />
+              <path d="M20 4V12M20 28V36M4 20H12M28 20H36" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="opacity-80" />
+              <path d="M10 10L14 14M30 30L26 26M10 30L14 26M30 10L26 14" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" strokeLinecap="round" />
+              <circle cx="20" cy="20" r="3" fill="rgb(var(--accent-warm))" className="drop-shadow-[0_0_8px_rgba(255,232,219,0.8)]" />
+            </svg>
+          </div>
 
           <div className="leading-none">
             <p className="text-[13px] font-semibold tracking-[0.15em] text-[rgb(var(--text-primary))] uppercase">

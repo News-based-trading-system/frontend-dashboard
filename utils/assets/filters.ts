@@ -14,7 +14,7 @@ const VALID_SORTS: AssetSortKey[] = [
 ];
 
 const VALID_DIRECTIONS: AssetDirection[] = ["bullish", "bearish", "neutral"];
-const VALID_TYPES: AssetTypeRoute[] = ["stocks", "etfs", "commodities"];
+const VALID_TYPES: AssetTypeRoute[] = ["stocks", "commodities"];
 
 const readSingle = (value?: string | string[]) =>
   Array.isArray(value) ? value[0] : value;

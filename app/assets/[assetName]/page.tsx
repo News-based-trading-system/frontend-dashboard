@@ -65,7 +65,7 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
           </div>
           <div className="glass-card-static rounded-2xl px-6 py-5 text-right">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Asset score</p>
-            <p className="mt-2 text-4xl font-extrabold gradient-text-static">{formatNumber(asset.asset_score)}</p>
+            <p className={`mt-2 text-4xl font-extrabold ${asset.direction === 'bullish' ? 'text-[rgb(var(--bullish))] drop-shadow-[0_0_12px_rgba(var(--bullish),0.4)]' : asset.direction === 'bearish' ? 'text-[rgb(var(--bearish))] drop-shadow-[0_0_12px_rgba(var(--bearish),0.4)]' : 'gradient-text-static'}`}>{formatNumber(asset.asset_score)}</p>
           </div>
         </div>
         <p className="relative mt-8 max-w-3xl text-base leading-8 text-[rgb(var(--text-tertiary))]">{getSignalNarrative(asset)}</p>
@@ -103,14 +103,12 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
           />
           <dl className="mt-6 grid gap-3 text-sm text-[rgb(var(--text-tertiary))]">
             {[
-              { label: "Bull sum", value: formatSignedNumber(asset.bull_sum) },
-              { label: "Bear sum", value: formatSignedNumber(asset.bear_sum) },
-              { label: "Latest event ID", value: formatEventId(asset.latest_event_id), mono: true },
-              { label: "Last event time", value: formatTimestamp(asset.last_event_time) },
+              { label: "Bull sum", value: formatSignedNumber(asset.bull_sum), colorClass: "text-[rgb(var(--bullish))] drop-shadow-[0_0_6px_rgba(var(--bullish),0.3)]" },
+              { label: "Bear sum", value: formatSignedNumber(asset.bear_sum), colorClass: "text-[rgb(var(--bearish))] drop-shadow-[0_0_6px_rgba(var(--bearish),0.3)]" },
             ].map((item) => (
               <div key={item.label} className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-[rgba(var(--surface-0),0.4)] px-4 py-4 transition-all duration-300 hover:border-[rgba(var(--accent-primary),0.1)]">
                 <dt>{item.label}</dt>
-                <dd className={`font-semibold text-[rgb(var(--text-primary))] ${item.mono ? "font-mono text-xs" : ""}`}>{item.value}</dd>
+                <dd className={`font-semibold ${item.colorClass}`}>{item.value}</dd>
               </div>
             ))}
           </dl>

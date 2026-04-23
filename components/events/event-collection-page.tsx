@@ -42,7 +42,7 @@ export function EventCollectionPage({ events, filters }: EventCollectionPageProp
     <div className="space-y-8">
       {/* Minimal Hero Section */}
       <div className="relative pb-10 pt-8">
-        <div className="relative grid gap-16 lg:grid-cols-[1.5fr_1fr]">
+        <div className="relative">
           <div className="space-y-10">
             <SectionHeading
               eyebrow="Live events"
@@ -64,27 +64,6 @@ export function EventCollectionPage({ events, filters }: EventCollectionPageProp
                 <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Avg severity</p>
                 <p className="mono-num mt-2 text-2xl font-light text-white">{Math.round(avgSeverity * 100)}%</p>
               </div>
-            </div>
-          </div>
-
-          <div className="space-y-6 pt-2">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-6 bg-[rgb(var(--accent-secondary))]" />
-              <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[rgb(var(--accent-secondary))]">
-                View Snapshot
-              </p>
-            </div>
-            <div className="space-y-6 text-[13px] font-light text-[rgb(var(--text-tertiary))]">
-              <p>
-                Sort: <span className="font-medium text-white">{filters.sort ?? "latest"}</span>
-                {filters.search ? <> · search <span className="font-medium text-white">"{filters.search}"</span></> : ""}
-                {filters.eventType ? <> · type <span className="font-medium text-white">{filters.eventType}</span></> : ""}
-                {filters.region ? <> · region <span className="font-medium text-white">{filters.region}</span></> : ""}
-                {filters.certainty ? <> · <span className="font-medium text-white">{filters.certainty}</span></> : ""}
-                <br/>
-                <span className="mt-1 block">Avg confidence: {Math.round(avgConfidence * 100)}%</span>
-                <span className="mt-1 block">Unique regions: {regions.length}</span>
-              </p>
             </div>
           </div>
         </div>

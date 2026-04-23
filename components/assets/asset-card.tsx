@@ -35,7 +35,7 @@ export function AssetCard({ asset }: AssetCardProps) {
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">
               Score
             </p>
-            <p className="mono-num mt-1 text-2xl font-black gradient-text-static">
+            <p className={`mono-num mt-1 text-2xl font-black ${asset.direction === 'bullish' ? 'text-[rgb(var(--bullish))] drop-shadow-[0_0_10px_rgba(var(--bullish),0.4)]' : asset.direction === 'bearish' ? 'text-[rgb(var(--bearish))] drop-shadow-[0_0_10px_rgba(var(--bearish),0.4)]' : 'gradient-text-static'}`}>
               {formatNumber(asset.asset_score)}
             </p>
           </div>

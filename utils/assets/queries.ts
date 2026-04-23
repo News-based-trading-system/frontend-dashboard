@@ -31,7 +31,6 @@ const ASSET_TABLE = "assets";
 
 const ASSET_TYPE_PATTERNS: Record<AssetTypeRoute, string[]> = {
   stocks: ["stock", "stocks", "equity"],
-  etfs: ["etf", "etfs", "fund"],
   commodities: ["commodity", "commodities", "macro"],
 };
 
@@ -278,7 +277,6 @@ export const getLandingData = async () => {
     bullishCount,
     bearishCount,
     stockCount,
-    etfCount,
     commodityCount,
   ] = await Promise.all([
     getAssets({ sort: "activity", limit: 4 }),
@@ -289,7 +287,6 @@ export const getLandingData = async () => {
     countAssets({ direction: "bullish" }),
     countAssets({ direction: "bearish" }),
     countAssets({ type: "stocks" }),
-    countAssets({ type: "etfs" }),
     countAssets({ type: "commodities" }),
   ]);
 
@@ -311,8 +308,8 @@ export const getLandingData = async () => {
     },
     {
       label: "Coverage",
-      value: `${stockCount + etfCount + commodityCount}`,
-      hint: `${ASSET_ROUTE_LABELS.stocks}, ${ASSET_ROUTE_LABELS.etfs}, and ${ASSET_ROUTE_LABELS.commodities}.`,
+      value: `${stockCount + commodityCount}`,
+      hint: `${ASSET_ROUTE_LABELS.stocks} and ${ASSET_ROUTE_LABELS.commodities}.`,
     },
   ];
 
@@ -324,7 +321,6 @@ export const getLandingData = async () => {
     metrics,
     assetTypeCounts: {
       stocks: stockCount,
-      etfs: etfCount,
       commodities: commodityCount,
     },
   };

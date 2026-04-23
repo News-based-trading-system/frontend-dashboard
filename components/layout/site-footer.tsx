@@ -5,7 +5,6 @@ const footerLinks = [
   { href: "/bullish",     label: "Bullish" },
   { href: "/bearish",     label: "Bearish" },
   { href: "/stocks",      label: "Stocks" },
-  { href: "/etfs",        label: "ETFs" },
   { href: "/commodities", label: "Commodities" },
   { href: "/events",      label: "Events" },
 ];
@@ -22,11 +21,15 @@ export function SiteFooter() {
           {/* Brand */}
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl">
-                <span className="absolute inset-0 bg-gradient-to-br from-[rgba(115,158,201,0.28)] to-[rgba(86,130,177,0.14)]" />
-                <span className="absolute inset-[1px] rounded-[11px] bg-black" />
-                <span className="gradient-text-static relative text-xs font-black">AH</span>
-              </span>
+              <div className="relative flex h-8 w-8 items-center justify-center">
+                <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[rgb(var(--accent-secondary))] transition-all duration-[1.5s] ease-in-out group-hover:rotate-90 group-hover:scale-105">
+                  <circle cx="20" cy="20" r="18" stroke="currentColor" strokeWidth="1" strokeOpacity="0.15" />
+                  <circle cx="20" cy="20" r="12" stroke="currentColor" strokeWidth="0.5" strokeOpacity="0.4" strokeDasharray="3 3" />
+                  <path d="M20 4V12M20 28V36M4 20H12M28 20H36" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="opacity-80" />
+                  <path d="M10 10L14 14M30 30L26 26M10 30L14 26M30 10L26 14" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" strokeLinecap="round" />
+                  <circle cx="20" cy="20" r="3" fill="rgb(var(--accent-warm))" className="drop-shadow-[0_0_8px_rgba(255,232,219,0.8)]" />
+                </svg>
+              </div>
               <p className="text-sm font-semibold tracking-[0.16em] text-[rgb(var(--text-primary))] uppercase">
                 Asset Harbor
               </p>

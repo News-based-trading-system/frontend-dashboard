@@ -7,7 +7,7 @@ export type AssetSortKey =
   | "activity"
   | "disagreement";
 
-export type AssetTypeRoute = "stocks" | "etfs" | "commodities";
+export type AssetTypeRoute = "stocks" | "commodities";
 
 export type AssetScoreRecord = {
   asset_name: string;
@@ -101,7 +101,6 @@ export type AssetOverviewMetric = {
 
 export const ASSET_ROUTE_LABELS: Record<AssetTypeRoute, string> = {
   stocks: "Stocks",
-  etfs: "ETFs",
   commodities: "Commodities",
 };
 
