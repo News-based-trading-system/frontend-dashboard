@@ -5,12 +5,9 @@ import { AssetDirectionBadge } from "../../../components/assets/asset-direction-
 import { AssetExplainabilityTable } from "../../../components/assets/asset-explainability-table";
 import { SectionHeading } from "../../../components/section-heading";
 import {
-  formatCompactNumber,
-  formatEventId,
-  formatNumber,
-  formatPercent,
-  formatSignedNumber,
-  formatTimestamp,
+  formatScorePercentage,
+  formatTimestampIst,
+  getConvictionLabel,
   getAssetByName,
   getAssetExplainability,
   getAssets,
@@ -40,6 +37,8 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
     includeInactive: true,
     limit: 40,
   });
+  const isBullish = asset.direction === "bullish";
+  const isBearish = asset.direction === "bearish";
 
   return (
     <div className="space-y-10 pb-12">
@@ -56,68 +55,68 @@ export default async function AssetDetailPage({ params }: AssetDetailPageProps) 
               Back to dashboard
             </Link>
             <div className="flex flex-wrap items-center gap-4">
-              <h1 className="text-4xl font-extrabold tracking-tight text-[rgb(var(--text-primary))] md:text-5xl">
-                {asset.asset_name}
-              </h1>
+              <span
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-3xl font-black uppercase tracking-[0.2em] md:text-4xl ${
+                  isBullish
+                    ? "border-[rgba(124,210,165,0.4)] bg-[rgba(124,210,165,0.1)] text-[rgb(var(--bullish))]"
+                    : isBearish
+                      ? "border-[rgba(255,120,156,0.4)] bg-[rgba(255,120,156,0.1)] text-[rgb(var(--bearish))]"
+                      : "border-[rgba(115,158,201,0.35)] bg-[rgba(115,158,201,0.08)] text-white"
+                }`}
+              >
+                <span>{asset.asset_name}</span>
+              </span>
+              <span
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-full border ${
+                  isBullish
+                    ? "border-[rgba(124,210,165,0.4)] text-[rgb(var(--bullish))]"
+                    : isBearish
+                      ? "border-[rgba(255,120,156,0.4)] text-[rgb(var(--bearish))]"
+                      : "border-[rgba(115,158,201,0.35)] text-[rgb(var(--accent-secondary))]"
+                }`}
+                aria-hidden="true"
+              >
+                {isBearish ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 5v14M6 13l6 6 6-6" />
+                  </svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 19V5M6 11l6-6 6 6" />
+                  </svg>
+                )}
+              </span>
               <AssetDirectionBadge direction={asset.direction} />
             </div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">{asset.asset_type}</p>
           </div>
           <div className="glass-card-static rounded-2xl px-6 py-5 text-right">
             <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Asset score</p>
-            <p className={`mt-2 text-4xl font-extrabold ${asset.direction === 'bullish' ? 'text-[rgb(var(--bullish))] drop-shadow-[0_0_12px_rgba(var(--bullish),0.4)]' : asset.direction === 'bearish' ? 'text-[rgb(var(--bearish))] drop-shadow-[0_0_12px_rgba(var(--bearish),0.4)]' : 'gradient-text-static'}`}>{formatNumber(asset.asset_score)}</p>
+            <p className={`mt-2 text-4xl font-extrabold ${asset.direction === 'bullish' ? 'text-[rgb(var(--bullish))] drop-shadow-[0_0_12px_rgba(var(--bullish),0.4)]' : asset.direction === 'bearish' ? 'text-[rgb(var(--bearish))] drop-shadow-[0_0_12px_rgba(var(--bearish),0.4)]' : 'gradient-text-static'}`}>{formatScorePercentage(asset.asset_score)}</p>
           </div>
         </div>
         <p className="relative mt-8 max-w-3xl text-base leading-8 text-[rgb(var(--text-tertiary))]">{getSignalNarrative(asset)}</p>
       </div>
 
       {/* Metric cards */}
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 md:grid-cols-2">
         <div className="glass-card rounded-2xl p-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Confidence</p>
-          <p className="mt-3 text-3xl font-bold text-[rgb(var(--text-primary))]">{formatPercent(asset.confidence)}</p>
-        </div>
-        <div className="glass-card rounded-2xl p-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Disagreement</p>
-          <p className="mt-3 text-3xl font-bold text-[rgb(var(--text-primary))]">{formatPercent(asset.disagreement)}</p>
-        </div>
-        <div className="glass-card rounded-2xl p-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Activity / events</p>
-          <p className="mt-3 text-3xl font-bold text-[rgb(var(--text-primary))]">
-            {formatCompactNumber(asset.abs_sum)} / {asset.event_count}
-          </p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Conviction</p>
+          <p className="mt-3 text-3xl font-bold text-[rgb(var(--text-primary))]">{getConvictionLabel(asset.confidence)}</p>
         </div>
         <div className="glass-card rounded-2xl p-5">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[rgb(var(--text-tertiary))]">Updated</p>
-          <p className="mt-3 text-lg font-bold text-[rgb(var(--text-primary))]">{formatTimestamp(asset.updated_at)}</p>
+          <p className="mt-3 text-lg font-bold text-[rgb(var(--text-primary))]">{formatTimestampIst(asset.updated_at)}</p>
         </div>
       </section>
 
-      {/* Signal profile + Explainability */}
-      <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <div className="glass-card-static rounded-2xl p-6">
-          <SectionHeading
-            eyebrow="Why it stands out"
-            title="Signal profile"
-            description="A clean breakdown of the underlying public metrics behind this asset's visibility."
-          />
-          <dl className="mt-6 grid gap-3 text-sm text-[rgb(var(--text-tertiary))]">
-            {[
-              { label: "Bull sum", value: formatSignedNumber(asset.bull_sum), colorClass: "text-[rgb(var(--bullish))] drop-shadow-[0_0_6px_rgba(var(--bullish),0.3)]" },
-              { label: "Bear sum", value: formatSignedNumber(asset.bear_sum), colorClass: "text-[rgb(var(--bearish))] drop-shadow-[0_0_6px_rgba(var(--bearish),0.3)]" },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center justify-between rounded-xl border border-white/[0.04] bg-[rgba(var(--surface-0),0.4)] px-4 py-4 transition-all duration-300 hover:border-[rgba(var(--accent-primary),0.1)]">
-                <dt>{item.label}</dt>
-                <dd className={`font-semibold ${item.colorClass}`}>{item.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+      {/* Explainability */}
+      <section>
         <div className="glass-card-static rounded-2xl p-6">
           <SectionHeading
             eyebrow="Signal explainability"
-            title="How each event contributes"
-            description="Contribution rows include current versus original impact, event certainty/severity, and source article context."
+            title="Timeline context"
+            description="Each row keeps the event headline and time only, for a cleaner narrative view."
           />
           <AssetExplainabilityTable rows={explainabilityRows} />
         </div>

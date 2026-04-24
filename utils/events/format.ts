@@ -18,5 +18,5 @@ export const getEventNarrative = (event: EventListRecord) => {
         ? "moderate-confidence"
         : "developing-confidence";
 
-  return `${formatEventTypeLabel(event.event_type)} event in ${formatRegionLabel(event.region_of_effect)} with ${confidenceTier} signal quality.`;
+  return `${formatEventTypeLabel(event.event_type)} signal with ${confidenceTier} quality.`;
 };

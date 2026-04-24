@@ -13,14 +13,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     <AssetCollectionPage
       eyebrow="Market dashboard"
       title="Scan curated opportunities across every public segment"
-      description="Search by name, shift the sort order, and quickly pivot between conviction, recency, and activity without losing the premium overview."
+      description="Search by name and quickly pivot between conviction, recency, and activity."
       assets={assets}
       filters={filters}
-      accent={
-        <p className="text-sm leading-7 text-slate-300">
-          This is the master public view. It keeps the strongest curated rows visible while letting users refine by type, direction, and score posture.
-        </p>
-      }
     />
   );
 }

@@ -79,7 +79,8 @@ export function AssetFilters({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search by asset name"
-            className="form-input pl-10"
+            className="form-input"
+            style={{ paddingLeft: "2.5rem" }}
           />
         </div>
       </label>

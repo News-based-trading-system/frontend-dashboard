@@ -13,5 +13,5 @@ export default async function EventsPage({ searchParams }: EventsPageProps) {
   });
   const events = await getEvents(filters);
 
-  return <EventCollectionPage events={events} filters={filters} />;
+  return <EventCollectionPage events={events} />;
 }

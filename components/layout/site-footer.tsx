@@ -2,8 +2,6 @@ import Link from "next/link";
 
 const footerLinks = [
   { href: "/dashboard",   label: "Dashboard" },
-  { href: "/bullish",     label: "Bullish" },
-  { href: "/bearish",     label: "Bearish" },
   { href: "/stocks",      label: "Stocks" },
   { href: "/commodities", label: "Commodities" },
   { href: "/events",      label: "Events" },

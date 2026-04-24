@@ -18,6 +18,15 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   timeZoneName: "short",
 });
 
+const istDateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+  timeZone: "Asia/Kolkata",
+});
+
 export const formatNumber = (value: number) => numberFormatter.format(value);
 
 export const formatCompactNumber = (value: number) => compactFormatter.format(value);
@@ -38,6 +47,44 @@ export const formatTimestamp = (value: string | null) => {
   }
 
   return dateFormatter.format(parsed);
+};
+
+export const formatTimestampIst = (value: string | null) => {
+  if (!value) {
+    return "No recent update";
+  }
+
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return "No recent update";
+  }
+
+  return istDateFormatter.format(parsed);
+};
+
+export const formatScorePercentage = (value: number) => {
+  const percentage = value * 100;
+  return `${numberFormatter.format(percentage)}%`;
+};
+
+export const getConvictionLabel = (confidence: number) => {
+  if (confidence < 0.3) {
+    return "Low Conviction";
+  }
+
+  if (confidence < 0.55) {
+    return "Cautious";
+  }
+
+  if (confidence < 0.75) {
+    return "Solid";
+  }
+
+  if (confidence < 0.9) {
+    return "High";
+  }
+
+  return "Very High";
 };
 
 export const formatEventId = (value: string | null) => {

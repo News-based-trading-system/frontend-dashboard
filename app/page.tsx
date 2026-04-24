@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { AssetCard } from "../components/assets/asset-card";
 import { AssetTable } from "../components/assets/asset-table";
-import { MetricCard } from "../components/metric-card";
 import { SectionHeading } from "../components/section-heading";
 import { ScrollReveal } from "../components/scroll-reveal";
 import { getLandingData } from "../utils/assets";
@@ -37,7 +36,7 @@ const platformPillars = [
 ];
 
 export default async function Home() {
-  const { featured, bullish, bearish, latest, metrics, assetTypeCounts } = await getLandingData();
+  const { featured, bullish, bearish, latest } = await getLandingData();
 
   return (
     <div className="space-y-32 pb-24 md:space-y-48">
@@ -70,28 +69,10 @@ export default async function Home() {
             <Link href="/dashboard" className="btn-primary px-8 py-3.5 text-sm">
               <span>Enter Dashboard</span>
             </Link>
-            <Link href="/bullish" className="group flex items-center gap-2 text-sm text-[rgb(var(--text-tertiary))] transition-colors hover:text-[rgb(var(--accent-warm))]">
-              <span>View bullish leaders</span>
+            <Link href="/dashboard?direction=bullish" className="group flex items-center gap-2 text-sm text-[rgb(var(--text-tertiary))] transition-colors hover:text-[rgb(var(--accent-warm))]">
+              <span>View leaders in dashboard</span>
               <span className="h-px w-4 bg-[rgb(var(--text-tertiary))] transition-all group-hover:w-8 group-hover:bg-[rgb(var(--accent-warm))]" />
             </Link>
-          </div>
-        </ScrollReveal>
-      </section>
-
-      {/* ──────── MINIMALIST STATS ROW ──────── */}
-      <section className="relative mx-auto max-w-5xl">
-        <ScrollReveal animation="blur-in" delay={0.2}>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-12 md:grid-cols-4 divide-x divide-white/[0.04]">
-            {metrics.map((metric, i) => (
-              <div key={metric.label} className={`px-6 ${i === 0 ? "pl-0" : ""}`}>
-                <p className="text-[10px] uppercase tracking-[0.3em] text-[rgb(var(--text-tertiary))]">
-                  {metric.label}
-                </p>
-                <p className="mono-num mt-3 text-3xl font-light tracking-tighter text-white">
-                  {metric.value}
-                </p>
-              </div>
-            ))}
           </div>
         </ScrollReveal>
       </section>

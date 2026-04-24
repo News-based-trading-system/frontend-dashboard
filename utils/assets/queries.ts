@@ -6,14 +6,12 @@ import type {
   AssetDirection,
   AssetExplainabilityOptions,
   AssetExplainabilityRow,
-  AssetOverviewMetric,
   AssetQueryOptions,
   AssetScoreRecord,
   EventSummaryRecord,
   AssetSortKey,
   AssetTypeRoute,
 } from "./types";
-import { ASSET_ROUTE_LABELS } from "./types";
 
 const ASSET_SELECT =
   "asset_name, asset_type, asset_score, bull_sum, bear_sum, abs_sum, event_count, latest_event_id, last_event_time, direction, confidence, disagreement, display_flag, updated_at";
@@ -252,76 +250,18 @@ export const getAssetExplainability = async (
   });
 };
 
-const countAssets = async (options: AssetQueryOptions = {}) => {
-  const supabase = await getSupabaseServerClient();
-  let query = supabase.from(ASSET_TABLE).select("*", { count: "exact", head: true });
-
-  query = applyCommonFilters(query, options);
-
-  const { count, error } = await query;
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return count ?? 0;
-};
-
 export const getLandingData = async () => {
-  const [
-    featured,
-    bullish,
-    bearish,
-    latest,
-    totalCount,
-    bullishCount,
-    bearishCount,
-    stockCount,
-    commodityCount,
-  ] = await Promise.all([
+  const [featured, bullish, bearish, latest] = await Promise.all([
     getAssets({ sort: "activity", limit: 4 }),
     getAssets({ direction: "bullish", sort: "confidence", limit: 4 }),
     getAssets({ direction: "bearish", sort: "score", limit: 4 }),
     getAssets({ sort: "latest", limit: 6 }),
-    countAssets(),
-    countAssets({ direction: "bullish" }),
-    countAssets({ direction: "bearish" }),
-    countAssets({ type: "stocks" }),
-    countAssets({ type: "commodities" }),
   ]);
-
-  const metrics: AssetOverviewMetric[] = [
-    {
-      label: "Curated assets",
-      value: totalCount.toString(),
-      hint: "Public-facing opportunities currently passing the display gate.",
-    },
-    {
-      label: "Bullish leaders",
-      value: bullishCount.toString(),
-      hint: "Curated assets with positive directional momentum.",
-    },
-    {
-      label: "Bearish leaders",
-      value: bearishCount.toString(),
-      hint: "Curated assets showing downside pressure worth watching.",
-    },
-    {
-      label: "Coverage",
-      value: `${stockCount + commodityCount}`,
-      hint: `${ASSET_ROUTE_LABELS.stocks} and ${ASSET_ROUTE_LABELS.commodities}.`,
-    },
-  ];
 
   return {
     featured,
     bullish,
     bearish,
     latest,
-    metrics,
-    assetTypeCounts: {
-      stocks: stockCount,
-      commodities: commodityCount,
-    },
   };
 };

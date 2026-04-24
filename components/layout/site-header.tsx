@@ -7,8 +7,6 @@ import { useState, useEffect } from "react";
 const navigation = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/events",    label: "Live Events" },
-  { href: "/bullish",   label: "Bullish" },
-  { href: "/bearish",   label: "Bearish" },
   { href: "/stocks",    label: "Stocks" },
   { href: "/commodities", label: "Commodities" },
 ];
@@ -66,14 +64,14 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-0.5 lg:flex">
+        <nav className="hidden lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2 lg:items-center lg:gap-2" aria-label="Primary navigation">
           {navigation.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative rounded-lg px-3 py-2 text-[13px] font-medium transition-all duration-300 ${
+                className={`relative inline-flex min-w-[128px] items-center justify-center rounded-lg px-3 py-2 text-center text-[13px] font-medium transition-all duration-300 ${
                   isActive
                     ? "text-[rgb(var(--accent-secondary))]"
                     : "text-[rgb(var(--text-tertiary))] hover:text-[rgb(var(--text-secondary))] hover:bg-[rgba(86,130,177,0.05)]"

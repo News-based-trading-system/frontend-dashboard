@@ -1,11 +1,6 @@
 import Link from "next/link";
 import type { AssetExplainabilityRow } from "../../utils/assets";
-import {
-  formatEventId,
-  formatPercent,
-  formatSignedNumber,
-  formatTimestamp,
-} from "../../utils/assets";
+import { formatEventId, formatTimestampIst } from "../../utils/assets";
 
 type AssetExplainabilityTableProps = {
   rows: AssetExplainabilityRow[];
@@ -63,7 +58,7 @@ export function AssetExplainabilityTable({ rows }: AssetExplainabilityTableProps
               <div>
                 <p className="text-sm font-semibold text-[rgb(var(--text-primary))]">{formatEventLabel(row)}</p>
                 <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--text-tertiary))]">
-                  {row.event?.event_type ?? "unknown type"} — {row.event?.certainty ?? "unknown certainty"}
+                  Event timeline
                 </p>
               </div>
               <p className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${stateStyles[state] || stateStyles.inactive}`}>
@@ -71,37 +66,14 @@ export function AssetExplainabilityTable({ rows }: AssetExplainabilityTableProps
               </p>
             </div>
 
-            <dl className="mt-4 grid gap-3 text-xs text-[rgb(var(--text-tertiary))] sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
-                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Current impact</dt>
-                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
-                  {formatSignedNumber(row.contribution.current_contribution)}
-                </dd>
-              </div>
-              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
-                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Original impact</dt>
-                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
-                  {formatSignedNumber(row.contribution.initial_contribution)}
-                </dd>
-              </div>
-              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
-                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Severity / confidence</dt>
-                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
-                  {row.event ? `${formatPercent(row.event.event_severity)} / ${formatPercent(row.event.event_confidence)}` : "Unavailable"}
-                </dd>
-              </div>
-              <div className="rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-3 py-3">
-                <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Event time</dt>
-                <dd className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
-                  {formatTimestamp(row.contribution.event_time)}
-                </dd>
-              </div>
-            </dl>
+            <div className="mt-4 rounded-lg border border-white/[0.04] bg-[rgba(var(--surface-0),0.5)] px-4 py-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--text-tertiary))]">Event time</p>
+              <p className="mt-2 text-sm font-bold text-[rgb(var(--text-primary))]">
+                {formatTimestampIst(row.contribution.event_time)}
+              </p>
+            </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[rgb(var(--text-tertiary))]">
-              <span>Region {row.event?.region_of_effect ?? "unknown"}</span>
-              <span>Arrival {formatTimestamp(row.contribution.arrival_time)}</span>
-              <span>Updated {formatTimestamp(row.contribution.updated_at)}</span>
               {row.contribution.duplicate_group_key ? (
                 <span>Duplicate group {row.contribution.duplicate_group_key}</span>
               ) : null}

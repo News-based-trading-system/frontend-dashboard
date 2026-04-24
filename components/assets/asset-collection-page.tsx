@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
-import { formatPercent, formatTimestamp, normalizeDirection } from "../../utils/assets";
+import { normalizeDirection } from "../../utils/assets";
 import type { AssetQueryOptions, AssetScoreRecord } from "../../utils/assets";
 import { AssetFilters } from "./asset-filters";
 import { EmptyState } from "./empty-state";
 import { AssetCard } from "./asset-card";
-import { MetricCard } from "../metric-card";
-import { SectionHeading } from "../section-heading";
+import { PageHero } from "../page-hero";
 
 type AssetCollectionPageProps = {
   eyebrow: string;
@@ -28,42 +27,49 @@ export function AssetCollectionPage({
   allowDirection = true,
   accent,
 }: AssetCollectionPageProps) {
-  const leadAsset = assets[0];
-  const averageConfidence =
-    assets.length > 0
-      ? assets.reduce((sum, asset) => sum + asset.confidence, 0) / assets.length
-      : 0;
-  const freshest = assets[0]?.updated_at ?? null;
   const bullishCount = assets.filter(
     (asset) => normalizeDirection(asset.direction) === "bullish",
+  ).length;
+  const bearishCount = assets.filter(
+    (asset) => normalizeDirection(asset.direction) === "bearish",
   ).length;
 
   return (
     <div className="space-y-8">
-      {/* Minimal Hero Section */}
-      <div className="relative pb-10 pt-8">
-        <div className="relative">
-          <div className="space-y-10">
-            <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-            
-            {/* Minimal Stats Row */}
-            <div className="grid grid-cols-3 gap-6 divide-x divide-white/[0.04]">
-              <div className="pl-0">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Visible assets</p>
-                <p className="mono-num mt-2 text-2xl font-light text-white">{assets.length}</p>
-              </div>
-              <div className="pl-6">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Avg confidence</p>
-                <p className="mono-num mt-2 text-2xl font-light text-white">{formatPercent(averageConfidence)}</p>
-              </div>
-              <div className="pl-6">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--text-tertiary))]">Bullish share</p>
-                <p className="mono-num mt-2 text-2xl font-light text-white">{bullishCount}</p>
-              </div>
+      <PageHero
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
+        supporting={accent}
+        metrics={
+          <div className="grid grid-cols-1 gap-6 text-center sm:grid-cols-3 sm:divide-x sm:divide-white/[0.06]">
+            <div className="sm:pr-6">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-[rgb(var(--text-tertiary))]">
+                Total assets
+              </p>
+              <p className="mono-num mt-2 text-3xl font-light text-white md:text-4xl">
+                {assets.length}
+              </p>
+            </div>
+            <div className="sm:px-6">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-[rgb(var(--text-tertiary))]">
+                Bearish shares
+              </p>
+              <p className="mono-num mt-2 text-3xl font-light text-white md:text-4xl">
+                {bearishCount}
+              </p>
+            </div>
+            <div className="sm:pl-6">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-[rgb(var(--text-tertiary))]">
+                Bullish shares
+              </p>
+              <p className="mono-num mt-2 text-3xl font-light text-white md:text-4xl">
+                {bullishCount}
+              </p>
             </div>
           </div>
-        </div>
-      </div>
+        }
+      />
 
       <AssetFilters allowDirection={allowDirection} allowType={allowType} />
 
